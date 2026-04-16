@@ -1,59 +1,76 @@
 
-# Contributing to OWRS
+# Contributing to OHFS
 
-This repository documents how to contribute data to the **Open Water Rate Specification** (OWRS), a machine-readable format for specifying and sharing water rate information.
+This repository documents how to contribute data to the **Open Housing Fee Specification** (OHFS), a machine-readable format for specifying and sharing housing permit fee information.
 
-OWRS is designed so that anyone can contribute standardized water rate data.
+OHFS is designed so that anyone can contribute standardized housing fee data for California cities and counties.
 
-### Getting Started (Web survey survey.californiadatacollaborative.org)
+### Getting Started
 
-1. Refer the [OWRS README](https://github.com/California-Data-Collaborative/Open-Water-Rate-Specification/blob/master/README.md) for background information
-2. Find an unclaimed utility on the [spreadsheet tracking OWRS status for California water utilities](https://docs.google.com/spreadsheets/d/1THqfs-tCxQiov65hHD3pG-9wRULHMo1aANy3EOiEAQ4/edit#gid=1887640542) and put your name in the "Assignment" column to claim it as yours.
+1. Read the [OHFS README](README.md) for background on the format and examples.
+2. Pick a California city whose fee schedule has not yet been added. Check the `full_fee_schedules/California/` directory for what already exists.
+3. Find the city's current fee schedule. Most cities publish fee schedules on their Building and Safety or Community Development department websites, typically as a PDF resolution or fee schedule document.
 
-3. Google search the Utility name (Moulton Niguel Water District) and "water rate" to find the page containing water rate information.
-4. Use the OWRS creator web form ( survey.californiadatacollaborative.org ) and carefully answer the questions based on what you see on the Agency’s Water rate page.
-5. If you have any questions, please email info@californiadatacollaborative.com.
-6. After you have completed answering all questions, mark the agency as DONE in the [spreadsheet tracking OWRS status for California water utilities](https://docs.google.com/spreadsheets/d/1THqfs-tCxQiov65hHD3pG-9wRULHMo1aANy3EOiEAQ4/edit#gid=1887640542).
-7. Pick another utility!
-8. GOTO #2
-...
-9. Iterate
-...
-10. Pioneer a brighter future for CA!
+### Writing an OHFS File
 
-### Getting Started (Git)
+1. Fork this repository and clone it locally.
+2. Navigate to `full_fee_schedules/California/` and create a new folder for the city:
+   ```
+   mkdir "full_fee_schedules/California/[City Name]"
+   ```
+3. Create an OHFS file in that folder using the naming convention `[ACRONYM]-YYYY-MM-DD.ohfs`, where the date is the fee schedule's effective date:
+   ```
+   touch "full_fee_schedules/California/[City Name]/[ACRONYM]-YYYY-MM-DD.ohfs"
+   ```
+4. Start from one of the templates in the `templates/` directory:
+   - `template.ohfs` — base template for any fee structure
+   - `tiered_template.ohfs` — for fees tiered by project valuation or square footage
+   - `depends_on_template.ohfs` — for fees that vary by a single variable (e.g., bedroom count)
+   - `depends_on_multiple_template.ohfs` — for fees that vary by multiple variables
 
-Follow these simple steps
-(The example we use here is Moulton Niguel Water District)
+5. Fill in the fee structure based on the city's published fee schedule. Key things to capture:
+   - **Building permit fee** — usually tiered by project valuation. Note whether tiers are per-dollar or per-$1,000 of valuation.
+   - **Plan check fee** — usually a percentage of the building permit fee (commonly 65–80%).
+   - **Impact fees** — transportation, park, school, fire. These are often flat per-unit amounts that vary by bedroom count or project type.
+   - **Connection fees** — water and sewer connection or capacity fees.
+   - **State fees** — strong motion (SMIP) fee (typically 0.01% of valuation) and school fees (Education Code Level 1 fee).
+   - **Other surcharges** — technology fees, general plan fees, green building fees.
 
-1. Refer the [OWRS README](https://github.com/California-Data-Collaborative/Open-Water-Rate-Specification/blob/master/README.md)
-2. Fork the OWRS repo to your own Github.
-3. Clone the forked OWRS repo locally to your machine. `git clone <LINK to the FORKED REPO>`
-4. Find an unclaimed utility on the [spreadsheet tracking OWRS status for California water utilities](https://docs.google.com/spreadsheets/d/1THqfs-tCxQiov65hHD3pG-9wRULHMo1aANy3EOiEAQ4/edit#gid=1887640542) and put your name in the "Assignment" column to claim it as yours.
-5. Google search the Utility name (Moulton Niguel Water District) and "water rate" to find the page containing water rate information.
-  * For Moulton Niguel Water District - this would be https://www.mnwd.com/waterandwastewaterrates/
-6. On your computer
-   * `cd Open-Water-Rate-Specification/full_utility_rates/California/`
-   * `git checkout -b  "Moulton Niguel Water District - 147"`
-7. Create a new folder for that utility `mkdir "Moulton Niguel Water District - 147"` 
-  * Use the naming convention "[Agency Name] - [utility_id]" e.g. `mkdir "Moulton Niguel Water District - 147"`
-  * [Agency Name] and [utility_id] can be found in the tracking spreadsheet.
-8. Write an OWRS file for that utility in that folder
-  * Always helpful to compare with an OWRS file that [already exists here](https://github.com/California-Data-Collaborative/Open-Water-Rate-Specification/tree/8316d643dc2b28e1089ee97ba9cb7425a1c5c674/full_utility_rates/California)
-  * You will first use the [generic OWRS template aka `template.owrs` in the templates folder](https://github.com/California-Data-Collaborative/Open-Water-Rate-Specification/tree/master/templates)
-  * Based on the type of rate however - you can use the other templates (`depends_on_template.owrs` OR `tiered_template.owrs`)
-  * Use naming convention "[acronym]-YYYY-MM-DD.owrs"
-  * where YYY-MM-DD is the date when that utility's water rate is effective. (found on the Utility website)
-9. Ask questions on the OWRS slack as need be
-  * Make sure you capture Usage units correctly (if you encounter *GALLONS* - then conver to ccf/hcf 1 ccf/hcf = 748.052 gallons
-10. When your OWRS file is good to go, push your changes to the remote GitHub repo and submit a pull request!  
-11. A member of the CaDC data team will review the OWRS file and let you know if there are any questions
-12. Pick another utility!
-13. GOTO #4
-14. Pioneer a brighter future for CA!
+6. Use the standard fee component names and input variable names from the [README reference tables](README.md#fee-components) wherever possible to ensure consistency across files.
 
+7. Add a `notes` field in `metadata` to record any caveats, exceptions, or links to the source document.
 
-### Open water rate spectacular
+### Naming Conventions
 
-If you're attending this event in person, please feel free to ask [Chris](https://github.com/christophertull), [Vyki](https://github.com/vykster), [Patrick](https://github.com/patwater), [Vincent](https://github.com/vincent-hebble) or [David](https://github.com/dmarulli) (in CA) or [Varun](https://github.com/vr00n) / [Vipassana](https://github.com/vipassana) (in NYC) if you have any questions.  Regardless you can always ask questions in the open_water_rates ARGO slack channel.
+| Item | Convention | Example |
+|------|-----------|---------|
+| Folder | Full city name | `Long Beach` |
+| File | `[ACRONYM]-YYYY-MM-DD.ohfs` | `LB-2024-07-01.ohfs` |
+| Effective date | ISO 8601 (`YYYY-MM-DD`) | `2024-07-01` |
+| Permit classes | `UPPER_SNAKE_CASE` | `SINGLE_FAMILY`, `ADU`, `MULTI_FAMILY` |
+| Fee components | `lower_snake_case` | `building_permit_fee`, `plan_check_fee` |
 
+### Permit Classes
+
+Use these standard permit class names:
+
+| Class | Description |
+|-------|-------------|
+| `SINGLE_FAMILY` | Single-family detached residential |
+| `ADU` | Accessory Dwelling Unit |
+| `JADU` | Junior Accessory Dwelling Unit |
+| `MULTI_FAMILY` | Multi-family residential (any size) |
+| `COMMERCIAL` | Commercial construction |
+| `MIXED_USE` | Mixed-use development |
+| `OTHER` | Other project types not covered above |
+
+### Submitting Your Contribution
+
+1. Push your changes to your forked repository.
+2. Open a pull request against the `master` branch of this repository.
+3. In the PR description, link to the source fee schedule document and note the effective date.
+4. A reviewer will check the file for completeness and accuracy before merging.
+
+### Questions
+
+Open an [issue](https://github.com/argo-marketplace/open-housing-fee-specification/issues) if you have questions about encoding a particular fee structure.

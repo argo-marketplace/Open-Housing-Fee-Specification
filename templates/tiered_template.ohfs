@@ -1,0 +1,37 @@
+# OHFS template for fees tiered by project valuation or square footage.
+#
+# Use this template when a fee component (commonly building_permit_fee)
+# is calculated by applying different rates to successive bands of a
+# continuous input variable such as project_valuation or gross_sq_ft.
+#
+# Notation:
+#   {value}  — substitute from fee schedule source
+#   [value]  — mandatory field
+#   (value)  — fill in as appropriate
+---
+metadata:
+  effective_date: [YYYY-MM-DD]
+  city_name: [city name]
+  state: CA
+  fee_currency: USD
+  source_url: (URL to official fee schedule document)
+
+fee_structure:
+  {permit_class}:
+    tier_starts:          # lower bound of each tier (in dollars of project_valuation,
+      - (tier_1_start)    # or square feet if tiering by gross_sq_ft)
+      - (tier_2_start)
+      - (tier_3_start)
+      - (tier_4_start)
+      - (tier_5_start)
+      # add more tiers as needed
+    tier_prices:          # rate applied within each tier
+      - (tier_1_price)    # for valuation tiers: dollars per dollar of project_valuation
+      - (tier_2_price)    # for sq ft tiers: dollars per square foot
+      - (tier_3_price)
+      - (tier_4_price)
+      - (tier_5_price)
+    [building_permit_fee]: Tiered
+    plan_check_rate: (rate)                             # e.g. 0.65 for 65%
+    plan_check_fee: "plan_check_rate*building_permit_fee"
+    [total_fee]: "building_permit_fee+plan_check_fee"
