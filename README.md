@@ -1,23 +1,24 @@
 
-# Open Water Rate Specification
+# Open Housing Fee Specification
 
-This repository documents the **Open Water Rate Specification** (OWRS), a machine-readable format for specifying and sharing water rate information.
+This repository documents the **Open Housing Fee Specification** (OHFS), a machine-readable format for specifying and sharing housing permit fee information.
 
-OWRS is designed for analysts, economists, and software developers interested in analyzing water rates. OWRS attempts to fully encode a water utility's rate structure and pricing schedules in a form that is easy to store, share, modify and apply programmatically.
+OHFS is designed for planners, housing advocates, developers, and researchers interested in analyzing housing permit fees across California jurisdictions. OHFS attempts to fully encode a jurisdiction's permit fee structure in a form that is easy to store, share, modify, and apply programmatically.
 
 ### Table of Contents
 
-* [Why a Standard for Sharing Water Rates?](#why)
-   - [Benefits of OWRS](#benefits)
-   - [Alliance for Water Efficiency - Building a better (efficiency-oriented) rate structure](https://github.com/California-Data-Collaborative/Open-Water-Rate-Specification/blob/master/AWE-Building-a-better-RateStructure.pdf)
+* [Why a Standard for Sharing Housing Fees?](#why)
+   - [Benefits of OHFS](#benefits)
 * [Getting Started](#getting-started)
-   - [Example 1 - Simple Flat Rate](#example1)
-   - [Example 2 - Fixed Service Charge](#example2)
-   - [Example 3 - Fixed Service Charge that Depends on Meter Size](#example3)
-   - [Example 4 - Tiered Rates](#example4)
-   - [Example 5 - Budget Based Rates](#example5)
-   - [Example 6 - Other Cases](#example6)
-* [Full Utility Examples](#utility-examples)
+   - [Example 1 - Simple Flat Fee](#example1)
+   - [Example 2 - Per-Square-Foot Fee](#example2)
+   - [Example 3 - Tiered Building Permit Fee](#example3)
+   - [Example 4 - Formula-Based Plan Check Fee](#example4)
+   - [Example 5 - Impact Fee Depending on Bedroom Count](#example5)
+   - [Example 6 - Multi-Variable Dependencies](#example6)
+* [Full City Examples](#city-examples)
+* [Fee Components Reference](#fee-components)
+* [Input Variables Reference](#input-variables)
 
 ### Contribute
 
@@ -25,250 +26,262 @@ Please see the [CONTRIBUTING](CONTRIBUTING.md) file for details.
 
 ### Contact
 
-Please reach out with comments, ideas or suggestions using the [issues page](https://github.com/California-Data-Collaborative/Open-Water-Rate-Specification/issues), or [contact the CaDC](http://californiadatacollaborative.com/join-us/) directly.
+Please reach out with comments, ideas, or suggestions using the [issues page](https://github.com/argo-marketplace/open-housing-fee-specification/issues).
 
-----------------------------------------
+---
 
-## <a name="why"></a>Why a Standard for Sharing Water Rates?
+## <a name="why"></a>Why a Standard for Sharing Housing Fees?
 
-Anyone familiar with water rates is likely familiar with the PDF documents, [HTML tables](https://www.smgov.net/Departments/PublicWorks/ContentWater.aspx?id=7743) and [images](https://www.mnwd.com/waterandwastewaterrates/) generally used to present water pricing information to the public. These formats are useful because they provide a concise representation that is easy for people to understand. However, these formats are often not ideal for analysts, consultants, economists or others interested in analyzing water prices for several reasons:
+Housing permit fees in California are published in a patchwork of PDF documents, HTML tables, and council resolution attachments that are difficult to compare, analyze, or integrate into permitting tools. These formats serve human readers but create significant barriers for systematic analysis:
 
-1. HTML tables may be easy for customers to understand but they are difficult for computer code to understand and usually must be manually translated into code before a rate analysis can be performed.
+1. Fee schedules are published in inconsistent formats across cities, making cross-jurisdictional comparison labor-intensive.
+2. The formulas used to calculate total permit costs—especially interdependent fees like plan check fees—are often not explicitly stated.
+3. PDF and HTML formats are difficult to store, transmit, and parse programmatically.
 
-2. Sometimes the exact formulas used to calculate a water bill are not explicitly defined.
+California's housing crisis has placed renewed scrutiny on permit fees as a component of housing production costs. Understanding how fees vary across jurisdictions—and how they affect affordability—requires a machine-readable standard.
 
-3. PDF and HTML formats are more difficult to store, transmit and interpret than plain text.
+OHFS overcomes these barriers by specifying a plain-text format that fully encodes a jurisdiction's permit fee structure. Specifically:
 
-OWRS attempts to overcome these downsides by specifying a plain text format to fully specify a water rate structure. Specifically:
+1. OHFS is based on [YAML](http://yaml.org/), designed to be easy to store, transmit, and parse in any programming language while remaining human-readable.
+2. All fee components—including formulas, tiered structures, and conditional charges—are captured in a single flat file.
+3. The format supports the full range of California fee structures: flat fees, valuation-based tiers, per-unit impact fees, and formula-derived fees.
 
-1. OWRS is based on [YAML](http://yaml.org/), and as such it is designed to be easy to store, transmit, and parse in any programming language while also being easy for humans to read.
+### <a name="benefits"></a>Benefits of OHFS
 
-2. All the details stating how to calculate a customer bill, including formulas and conditional charges are specified in a single flat file.
+* Cross-jurisdictional analysis of permit fee levels and structures
+* Quantifying the impact of fees on housing production costs and affordability
+* Identifying fee structures that may disproportionately burden affordable or smaller-scale projects
+* Integration with permitting estimation tools and development pro forma models
+* Tracking fee changes over time as cities update their fee schedules
 
-### <a name="benefits"></a>Benefits of OWRS
-
-Machine-readability sounds nice on paper, but the real benefit of this standard is in all of the tools that it enables.
-
-* [RateParser](https://github.com/California-Data-Collaborative/RateParser) is an [R package](https://www.r-project.org/about.html) that has the ability to interpret OWRS files and calculate water bills. The package is designed to simplify the work of analysts and economists interested in calculating water bills under a variety of rate structures.
-
-* [Bill Calculator](https://github.com/California-Data-Collaborative/BillCalculator) is an [R Shiny Software Tool]https://shiny.rstudio.com/) that enables customers to see the impact of a change in usage on their water bill. This tool uses OWRS to show the specific water rates for their agency. A [demo tool can be seen here.](https://demo.californiadatacollaborative.com/BillCalculator/BillCalculator_RateParser_AddressInput/)
-
-* [RateComparison](https://github.com/California-Data-Collaborative/RateComparison) is a software program (written in [R Shiny](http://shiny.rstudio.com/)) that compares the revenue, equity, and demand implications of different water rate structures. A [demo tool can be seen here.](https://demo.californiadatacollaborative.com/smc/rate-tool/)
-
-* [OWRS Analysis](https://github.com/California-Data-Collaborative/OWRS-Analysis) is a standardized set of analyses used to develop the 2017 CA-NV AWWA Water Rate Report. Those notably include integration of census data statistics that analyze affordability and residential water budgets that analyze the connection to California's new water efficiency standards.
-
-* In the future, this standard will form the foundation for a comprehensive database of water price information, similar in nature to the [Utility Rate Database](http://en.openei.org/wiki/Utility_Rate_Database) in the energy sector. When combined with customer billing data (like that centralized through the [CaDC](http://californiadatacollaborative.com/)), this will enable a detailed, inter-utility analysis of revenue stability and water price equity.
+---
 
 ## <a name="getting-started"></a>Getting Started
 
-Perhaps the best way to demonstrate how OWRS specifies a water rate is through an example. Let's consider the simplest possible OWRS file, representing a simple flat rate structure.
+The best way to understand OHFS is through examples. Files use the `.ohfs` extension.
 
-#### <a name="example1"></a>Example 1 - Simple Flat Rate
+#### <a name="example1"></a>Example 1 - Simple Flat Fee
+
+The simplest OHFS file represents a jurisdiction that charges a single fixed fee for ADU applications.
+
 ```yaml
 ---
 metadata:
-  effective_date: 2016-01-01
-  utility_name: "Example Water District"
-  bill_frequency: monthly
-rate_structure:
-  RESIDENTIAL_SINGLE:
-    flat_rate: 2.1
-    commodity_charge: flat_rate*usage_ccf
-    bill: commodity_charge
+  effective_date: 2024-01-01
+  city_name: "Example City"
+  state: CA
+  fee_currency: USD
+
+fee_structure:
+  ADU:
+    planning_application_fee: 850
+    total_fee: planning_application_fee
 ```
 
-The `yaml` file format works by specifying a series of keys and values. In the example above, `bill_frequency` is a key and `monthly` is the value corresponding to that key. This key-value pair is itself a value of the `metadata` key.
+`metadata` captures descriptive information about the fee schedule. `fee_structure` contains the fee calculation data, organized by permit class (e.g., `ADU`, `SINGLE_FAMILY`, `MULTI_FAMILY`).
 
-`metadata` is used to specify information about the rate structure that is not actualy used to calculate bills, such as the name of the utility and the date the rate structure went into effect.
+In Example 1, the only fee is a flat `planning_application_fee` of $850, and `total_fee` is equal to it.
 
-`rate_structure` specifies information that is actually used for calculating water bills. The values of the `rate_structure` key are the customer classes used to define rates. In our examples we use the standard classes defined by the CaDC: `RESIDENTIAL_SINGLE`, `RESIDENTIAL_MULTI`, `IRRIGATION`, `COMMERCIAL`, `INDUSTRIAL`, and `INSTITUTIONAL`.
+#### <a name="example2"></a>Example 2 - Per-Square-Foot Fee
 
-In Example 1 above, we see a rate structure defined only for single-family residential customers, where the commodity charge is calculated as `flat_rate*usage_ccf` where `flat_rate` is 2.1, so the whole expression represents $2.1 per CCF of water used. In this case `usage_ccf` is the data column name used to represent water usage. The total bill (`bill`) for each customer is then equal to just the commodity charge.
+Many cities charge building permit fees on a per-square-foot basis, sometimes combined with a base fee.
 
-#### <a name="example2"></a>Example 2 - Fixed Service Charge
 ```yaml
 ---
 metadata:
-  ...
-rate_structure:
-  RESIDENTIAL_SINGLE:
-    service_charge: 14.65
-    flat_rate: 2.1
-    commodity_charge: flat_rate*usage_ccf
-    bill: commodity_charge+service_charge
+  effective_date: 2024-01-01
+  city_name: "Example City"
+  state: CA
+  fee_currency: USD
+
+fee_structure:
+  SINGLE_FAMILY:
+    base_permit_fee: 200
+    per_sqft_rate: 0.38
+    building_permit_fee: "base_permit_fee+per_sqft_rate*gross_sq_ft"
+    total_fee: building_permit_fee
 ```
 
-This second example extends Example 1 by adding a fixed service charge. Note that `bill` is now calculated as the sum of `service_charge` and `commodity_charge`.
+Here `gross_sq_ft` is an input variable representing the gross floor area of the project. `building_permit_fee` is a formula combining a fixed base fee with a per-square-foot charge. When OHFS parsers evaluate this file, they substitute the actual `gross_sq_ft` value from the project data.
 
-#### <a name="example3"></a>Example 3 - Fixed Service Charge that Depends on Meter Size
+#### <a name="example3"></a>Example 3 - Tiered Building Permit Fee
+
+Most cities use a tiered fee structure based on project valuation, where the per-dollar rate decreases as valuation increases.
+
 ```yaml
 ---
 metadata:
-  ...
-rate_structure:
-  RESIDENTIAL_SINGLE:
-    service_charge:
-      depends_on: meter_size
-      values:
-         3/4": 14.65
-         1"  : 16.77
-         2"  : 25.83
-    flat_rate: 2.1
-    commodity_charge: flat_rate*usage_ccf
-    bill: commodity_charge+service_charge
-```
+  effective_date: 2024-01-01
+  city_name: "Example City"
+  state: CA
+  fee_currency: USD
 
-Examples 1 & 2 above are composed entirely of simple parts, referred to in this context as **Fields** (e.g. `flat_rate: 2.1`) or **Formulas** (e.g. `bill: commodity_charge+service_charge`). However, often in real settings is it useful to have rate components that change for each customer. The canonical example is of a fixed service charge that depends on the size of the water meter used by each account (often referred to as a "meter charge").
-
-Example 3 is almost the same as Example 2, but the fixed service charge now changes depending on the size of the meter. It is important to ensure that when the OWRS file is used to calculate water bills (e.g. with the [RateParser](https://github.com/California-Data-Collaborative/RateParser) package), that the values specified in `values` ('3/4"', '1"', etc) are exactly the same as those that appear in the billing data set under the `meter_size` column.
-
-#### <a name="example4"></a>Example 4 - Tiered Rates
-```yaml
----
-metadata:
-  ...
-rate_structure:
-  RESIDENTIAL_SINGLE:
-    service_charge:
-      depends_on: meter_size
-      values:
-         3/4": 14.65
-         1"  : 16.77
-         2"  : 25.83
+fee_structure:
+  SINGLE_FAMILY:
     tier_starts:
       - 0
-      - 15
-      - 41
-      - 149
+      - 25000
+      - 50000
+      - 100000
+      - 500000
+      - 1000000
     tier_prices:
-      - 2.87
-      - 4.29
-      - 6.44
-      - 10.07
-    commodity_charge: Tiered
-    bill: commodity_charge+service_charge
+      - 0.0200
+      - 0.0175
+      - 0.0150
+      - 0.0120
+      - 0.0090
+      - 0.0060
+    building_permit_fee: Tiered
+    total_fee: building_permit_fee
 ```
 
-Example 4 replaces the flat rate structure of earlier examples with an [Increasing Block Rate](http://www.allianceforwaterefficiency.org/1Column.aspx?id=712), or "Tiered" rate structure. This pricing scheme is encoded using two new fields.
-* `tier_starts` represents the lower end of each block. It is the first unit of water billed at a specified price.
-* `tier_prices` specifies the price of water within each tier, in dollars per billing unit.
+When `building_permit_fee` is set to `Tiered`, OHFS parsers calculate the fee by multiplying the portion of `project_valuation` that falls within each tier by the corresponding `tier_price`. The `tier_starts` list defines the lower bound of each valuation tier in dollars. `tier_prices` are in dollars per dollar of project valuation.
 
-In Exampe 4, we can see that the first through the 14th units of water are billed at $2.87 per unit. The 15th through the 40th unit are billed at $4.29. The 41st through the 148th at $6.44. Finally all water use from the 149th unit and up is billed at $10.07 per unit.
+For example, on a $75,000 project: the first $25,000 is billed at $0.0200/dollar ($500), the next $25,000 at $0.0175/dollar ($437.50), and the remaining $25,000 at $0.0150/dollar ($375), for a total of $1,312.50.
 
-In this case, the `commodity_charge` field **must** be set as "Tiered" in order to specify how the tier starts are interpreted.
+#### <a name="example4"></a>Example 4 - Formula-Based Plan Check Fee
 
-#### <a name="example5"></a>Example 5 - Budget Based Rates
-
-OWRS also accomodates budget/allocation based rates, although the complexity of the file must rise to match the complexity of the rate structure.
+Plan check (plan review) fees are typically calculated as a percentage of the building permit fee—this interdependency is expressed with a formula.
 
 ```yaml
 ---
 metadata:
-  ...
-rate_structure:
-  RESIDENTIAL_SINGLE:
-    service_charge:
-      depends_on: meter_size
-      values:
-         3/4": 14.65
-         1"  : 16.77
-         2"  : 25.83
-    gpcd: 60
-    landscape_factor: 0.7
-    days_in_period: 30.4
-    indoor: "gpcd*hhsize*days_in_period*(1/748)"
-    outdoor: "landscape_factor*et_amount*irr_area*0.62*(1/748)"
-    budget: "indoor+outdoor"
+  effective_date: 2024-01-01
+  city_name: "Example City"
+  state: CA
+  fee_currency: USD
+
+fee_structure:
+  SINGLE_FAMILY:
     tier_starts:
       - 0
-      - indoor
-      - 100%
-      - 133%
+      - 25000
+      - 50000
+      - 100000
+      - 500000
     tier_prices:
-      - 2.87
-      - 4.29
-      - 6.44
-      - 10.07
-    commodity_charge: Budget
-    bill: commodity_charge+service_charge
+      - 0.0200
+      - 0.0175
+      - 0.0150
+      - 0.0120
+      - 0.0090
+    building_permit_fee: Tiered
+    plan_check_rate: 0.65
+    plan_check_fee: "plan_check_rate*building_permit_fee"
+    strong_motion_fee: "0.0001*project_valuation"
+    total_fee: "building_permit_fee+plan_check_fee+strong_motion_fee"
 ```
 
-Example 5 shows how to specify single-family rates under a budget based rate structure. There a several new fields and formulas in this example:
-* `gpcd`, `landscape_factor`, `days_in_period` are all simple fields that are the same across all SFR customers.
-      - Note that if `days_in_period` were not defined here as 30.4 (average number of days in a month) then it would be expected that the user defines this as a data column and this value could change to reflect the actual number of days in each customer's billing period.
-* `hhsize`, `irr_area`, and `et_amount` are expected to be provided as data columns.
-* `indoor`, `outdoor`, and `budget` represent the calculated indoor allocation, outdoor allocation, and total water budget, respectively.
+Here `plan_check_fee` is defined as 65% of the `building_permit_fee`, a common structure in California cities. `strong_motion_fee` is the state-mandated SMIP fee expressed as a fraction of project valuation. `total_fee` sums all components.
 
-When the `commodity_charge` is specified as "Budget", OWRS parsers interpret `tier_starts` differently. As is visible in this example, tier starts may be specified either as flat values in terms of billing units (as in Example 4) or they can be specified as a percentage of the `budget` field. This allows OWRS to accomodate different tier widths for each account based on data specific to that account.  
+#### <a name="example5"></a>Example 5 - Impact Fee Depending on Bedroom Count
 
-#### <a name="example6"></a>Example 6 - Other Cases
-
-The examples above cover the vast majority of use cases, but there are still a few that have not yet been discussed. Fortunately the OWRS framework is extremely flexible. For example:
-
-##### Tiers that depend on other values
-```yaml
----
-tier_starts:
-   depends_on: meter_size
-   values:
-     5/8":
-       - 0
-       - 211
-     1_1/2":
-       - 0
-       - 466
-     2":
-       - 0
-       - 871
-```
-
-##### Tiers that depend on multiple other values
-
-For example, [LADWP's tiers](https://www.ladwp.com/cs/idcplg?IdcService=GET_FILE&dDocName=AD17DWPWEB9173008669&RevisionSelectionMethod=LatestReleased) depend on season, lot size, and temperature zone
+Impact fees often vary by unit type or bedroom count. The `depends_on` field captures this conditional structure.
 
 ```yaml
 ---
-tier_starts:
-   depends_on:
-     - season
-     - lot_size_group
-     - temperature_zone
-   values:
-     Winter|1|Low:
-       - 0
-       - 17
-       - 23
-       - 35
-     Summer|1|Low:
-       - 0
-       - 17
-       - 29
-       - 53
-     Summer|1|Medium:
-       - 0
-       - 17
-       - 31
-       - 59
-     Summer|1|High:
-     ...
+metadata:
+  effective_date: 2024-01-01
+  city_name: "Example City"
+  state: CA
+  fee_currency: USD
+
+fee_structure:
+  MULTI_FAMILY:
+    transportation_impact_fee:
+      depends_on: bedroom_count
+      values:
+        0: 1250
+        1: 2100
+        2: 3150
+        3: 4200
+        4plus: 5250
+    park_impact_fee:
+      depends_on: bedroom_count
+      values:
+        0: 600
+        1: 950
+        2: 1400
+        3: 1900
+        4plus: 2400
+    total_fee: "transportation_impact_fee+park_impact_fee"
 ```
-In this case each combination is enumerated as "value1|value2|...|valueN", where the values appear in the order they are given in the `depends_on` field. This format is not quite as visually appealing as a table, but it provides easy processing for OWRS parsers.
 
-##### Rolling averages
+When evaluating fees, the parser looks up the value of `bedroom_count` from the project data and selects the corresponding fee amount. It is important that the `bedroom_count` values used in practice exactly match the keys defined in `values`.
 
-One somewhat common use case is for utilities with budget based rates to set their CII allocations as a rolling average of historical water use for a given month. Unfortunatley this functionality is not supported by current OWRS parsers, but there is a work-around. Instead of being computed in the parser, allocations for CII customers can be precomputed and saved as a data column (e.g. `cii_allocation)`. This column could then be referenced in the OWRS file as
+#### <a name="example6"></a>Example 6 - Multi-Variable Dependencies
+
+Some fees depend on multiple variables simultaneously. For example, school fees may vary by both project type and school district zone.
 
 ```yaml
 ---
-budget: cii_allocation
-tier_starts:
-  ...
-tier_prices:
-  ...
-commmodity_charge: Budget
-...
+metadata:
+  effective_date: 2024-01-01
+  city_name: "Example City"
+  state: CA
+  fee_currency: USD
+
+fee_structure:
+  MULTI_FAMILY:
+    school_fee:
+      depends_on:
+        - district_zone
+        - unit_type
+      values:
+        elementary|studio: 3.48
+        elementary|1_bedroom: 4.21
+        elementary|2plus_bedroom: 5.17
+        unified|studio: 4.12
+        unified|1_bedroom: 5.03
+        unified|2plus_bedroom: 6.31
+    total_fee: school_fee
 ```
 
-## <a name="utility-examples"></a>Full Utility Rate Files
+Values are encoded as pipe-delimited combination keys, matching the order of variables listed in `depends_on`. This format mirrors the OWRS convention for multi-variable dependencies and is straightforward for parsers to evaluate.
 
-See the [examples from California](https://github.com/California-Data-Collaborative/Open-Water-Rate-Specification/tree/master/full_utility_rates/California) in this repository for examples of full utility rate structures in OWRS format.
+---
+
+## <a name="city-examples"></a>Full City Fee Schedule Files
+
+See the [fee schedules for California cities](full_fee_schedules/California/) in this repository for complete examples of city fee structures in OHFS format.
+
+---
+
+## <a name="fee-components"></a>Fee Components Reference
+
+Standard fee component names used across OHFS files:
+
+| Field | Description |
+|-------|-------------|
+| `building_permit_fee` | Core building permit fee, typically tiered by project valuation |
+| `plan_check_fee` | Plan review fee, typically a percentage of the building permit fee |
+| `planning_application_fee` | Planning department application or entitlement fee |
+| `school_fee` | School impact fee (state-mandated under Education Code) |
+| `park_impact_fee` | Parks and recreation impact fee |
+| `transportation_impact_fee` | Transportation/traffic impact fee |
+| `fire_impact_fee` | Fire department impact or service fee |
+| `water_connection_fee` | Water connection or capacity fee |
+| `sewer_connection_fee` | Sewer/wastewater connection or capacity fee |
+| `strong_motion_fee` | State SMIP strong motion instrumentation fee |
+| `green_building_fee` | CalGreen standards compliance or inspection fee |
+| `affordable_housing_fee` | In-lieu affordable housing fee |
+| `general_plan_fee` | General plan maintenance surcharge |
+| `technology_fee` | Technology surcharge or permit software fee |
+| `total_fee` | Final total: formula summing all applicable components |
+
+---
+
+## <a name="input-variables"></a>Input Variables Reference
+
+Standard input variable names expected from project data when calculating fees:
+
+| Variable | Description |
+|----------|-------------|
+| `project_valuation` | Total construction valuation in dollars |
+| `gross_sq_ft` | Gross floor area in square feet |
+| `net_sq_ft` | Net habitable floor area in square feet |
+| `bedroom_count` | Number of bedrooms per unit |
+| `unit_count` | Number of dwelling units in the project |
+| `lot_sq_ft` | Lot area in square feet |
+| `stories` | Number of above-grade stories |
