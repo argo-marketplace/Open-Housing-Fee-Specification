@@ -1,0 +1,115 @@
+# Los Angeles, CA — Housing Permit Fee Schedule
+# Effective: July 1, 2024
+#
+# Source: Los Angeles Department of Building and Safety (LADBS) fee schedule
+# and Department of City Planning fee ordinance.
+# Note: Values are illustrative. Verify against the current official fee
+# resolution at https://www.ladbs.org/services/check-status/fee-schedule
+# before use in production.
+---
+metadata:
+  effective_date: 2024-07-01
+  city_name: "Los Angeles"
+  state: CA
+  fee_currency: USD
+  jurisdiction_type: city
+  source_url: "https://www.ladbs.org/services/check-status/fee-schedule"
+  notes: "Illustrative values. Excludes Mello-Roos, CFD, and area-specific overlay fees."
+
+fee_structure:
+
+  # -----------------------------------------------------------------------
+  # Single-Family Residential
+  # -----------------------------------------------------------------------
+  SINGLE_FAMILY:
+    tier_starts:
+      - 0
+      - 25000
+      - 50000
+      - 100000
+      - 500000
+      - 1000000
+      - 5000000
+    tier_prices:
+      - 0.02250
+      - 0.01880
+      - 0.01510
+      - 0.01180
+      - 0.00890
+      - 0.00710
+      - 0.00540
+    building_permit_fee: Tiered
+    plan_check_rate: 0.85
+    plan_check_fee: "plan_check_rate*building_permit_fee"
+    systems_development_fee: "0.0070*project_valuation"
+    strong_motion_fee: "0.00013*project_valuation"
+    green_building_fee: "0.00013*project_valuation"
+    technology_surcharge: "0.07*building_permit_fee"
+    general_plan_fee: "0.05*building_permit_fee"
+    total_fee: "building_permit_fee+plan_check_fee+systems_development_fee+strong_motion_fee+green_building_fee+technology_surcharge+general_plan_fee"
+
+  # -----------------------------------------------------------------------
+  # Accessory Dwelling Unit (ADU)
+  # State law (AB 68/881, AB 671) limits impact fees on ADUs <= 750 sq ft.
+  # -----------------------------------------------------------------------
+  ADU:
+    building_permit_fee: 1850
+    plan_check_fee: "0.85*building_permit_fee"
+    school_fee: "4.79*gross_sq_ft"
+    strong_motion_fee: 30
+    technology_surcharge: "0.07*building_permit_fee"
+    total_fee: "building_permit_fee+plan_check_fee+school_fee+strong_motion_fee+technology_surcharge"
+
+  JADU:
+    building_permit_fee: 600
+    plan_check_fee: "0.85*building_permit_fee"
+    total_fee: "building_permit_fee+plan_check_fee"
+
+  # -----------------------------------------------------------------------
+  # Multi-Family Residential
+  # Citywide Linkage Fee (Build Better LA) varies by Market Area.
+  # -----------------------------------------------------------------------
+  MULTI_FAMILY:
+    tier_starts:
+      - 0
+      - 100000
+      - 500000
+      - 1000000
+      - 5000000
+      - 25000000
+    tier_prices:
+      - 0.02100
+      - 0.01650
+      - 0.01180
+      - 0.00880
+      - 0.00640
+      - 0.00480
+    building_permit_fee: Tiered
+    plan_check_rate: 0.85
+    plan_check_fee: "plan_check_rate*building_permit_fee"
+    affordable_housing_linkage_fee:
+      depends_on: market_area
+      values:
+        high: 15.00
+        medium: 12.00
+        low: 8.00
+    transportation_impact_fee:
+      depends_on: bedroom_count
+      values:
+        0: 2950
+        1: 4100
+        2: 5800
+        3: 7500
+        4plus: 9200
+    park_impact_fee:
+      depends_on: bedroom_count
+      values:
+        0: 1100
+        1: 1800
+        2: 2700
+        3: 3600
+        4plus: 4500
+    school_fee: "4.79*gross_sq_ft"
+    strong_motion_fee: "0.00013*project_valuation"
+    technology_surcharge: "0.07*building_permit_fee"
+    total_fee: "building_permit_fee+plan_check_fee+affordable_housing_linkage_fee*gross_sq_ft+transportation_impact_fee+park_impact_fee+school_fee+strong_motion_fee+technology_surcharge"

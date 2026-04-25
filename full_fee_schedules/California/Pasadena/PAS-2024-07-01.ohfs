@@ -1,0 +1,80 @@
+# Pasadena, CA — Housing Permit Fee Schedule
+# Effective: July 1, 2024
+#
+# Source: City of Pasadena Planning and Community Development fee schedule.
+# Note: Values are illustrative. Verify against
+# https://www.cityofpasadena.net/planning before use in production.
+---
+metadata:
+  effective_date: 2024-07-01
+  city_name: "Pasadena"
+  state: CA
+  fee_currency: USD
+  jurisdiction_type: city
+  source_url: "https://www.cityofpasadena.net/planning"
+  notes: "Illustrative values. Inclusionary in-lieu fees apply to projects of 10+ units."
+
+fee_structure:
+
+  SINGLE_FAMILY:
+    tier_starts:
+      - 0
+      - 25000
+      - 100000
+      - 500000
+      - 1000000
+    tier_prices:
+      - 0.02340
+      - 0.01880
+      - 0.01400
+      - 0.01060
+      - 0.00800
+    building_permit_fee: Tiered
+    plan_check_rate: 0.65
+    plan_check_fee: "plan_check_rate*building_permit_fee"
+    strong_motion_fee: "0.00013*project_valuation"
+    green_building_fee: "0.00007*project_valuation"
+    technology_surcharge: "0.04*building_permit_fee"
+    total_fee: "building_permit_fee+plan_check_fee+strong_motion_fee+green_building_fee+technology_surcharge"
+
+  ADU:
+    building_permit_fee: 1550
+    plan_check_fee: "0.65*building_permit_fee"
+    school_fee: "4.79*gross_sq_ft"
+    strong_motion_fee: 25
+    total_fee: "building_permit_fee+plan_check_fee+school_fee+strong_motion_fee"
+
+  MULTI_FAMILY:
+    tier_starts:
+      - 0
+      - 50000
+      - 250000
+      - 1000000
+      - 5000000
+    tier_prices:
+      - 0.02340
+      - 0.01880
+      - 0.01400
+      - 0.01060
+      - 0.00800
+    building_permit_fee: Tiered
+    plan_check_rate: 0.65
+    plan_check_fee: "plan_check_rate*building_permit_fee"
+    inclusionary_in_lieu_fee:
+      depends_on: bedroom_count
+      values:
+        0: 21500
+        1: 28500
+        2: 35200
+        3plus: 41800
+    transportation_impact_fee:
+      depends_on: bedroom_count
+      values:
+        0: 1750
+        1: 2450
+        2: 3450
+        3plus: 4400
+    school_fee: "4.79*gross_sq_ft"
+    strong_motion_fee: "0.00013*project_valuation"
+    technology_surcharge: "0.04*building_permit_fee"
+    total_fee: "building_permit_fee+plan_check_fee+inclusionary_in_lieu_fee+transportation_impact_fee+school_fee+strong_motion_fee+technology_surcharge"

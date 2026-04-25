@@ -1,0 +1,91 @@
+# Half Moon Bay, CA — Housing Permit Fee Schedule
+# Effective: July 1, 2024
+#
+# Source: City of Half Moon Bay Community Development Department fee schedule.
+# Note: Values are illustrative. Verify against
+# https://www.hmbcity.com/170/Planning before use in production.
+---
+metadata:
+  effective_date: 2024-07-01
+  city_name: "Half Moon Bay"
+  state: CA
+  fee_currency: USD
+  jurisdiction_type: city
+  source_url: "https://www.hmbcity.com/170/Planning"
+  notes: "Illustrative values. Coastal Development Permit required separately for projects in coastal zone."
+
+fee_structure:
+
+  SINGLE_FAMILY:
+    tier_starts:
+      - 0
+      - 25000
+      - 100000
+      - 500000
+    tier_prices:
+      - 0.02250
+      - 0.01820
+      - 0.01380
+      - 0.01040
+    building_permit_fee: Tiered
+    plan_check_rate: 0.70
+    plan_check_fee: "plan_check_rate*building_permit_fee"
+    coastal_development_permit_fee: 2400
+    park_impact_fee: 4800
+    water_connection_fee: 32500
+    sewer_connection_fee: 14800
+    school_fee: "4.79*gross_sq_ft"
+    strong_motion_fee: "0.00013*project_valuation"
+    total_fee: "building_permit_fee+plan_check_fee+coastal_development_permit_fee+park_impact_fee+water_connection_fee+sewer_connection_fee+school_fee+strong_motion_fee"
+
+  ADU:
+    building_permit_fee: 1050
+    plan_check_fee: "0.70*building_permit_fee"
+    coastal_development_permit_fee:
+      depends_on: coastal_zone
+      values:
+        in_zone: 1200
+        outside_zone: 0
+    school_fee: "4.79*gross_sq_ft"
+    strong_motion_fee: 20
+    total_fee: "building_permit_fee+plan_check_fee+coastal_development_permit_fee+school_fee+strong_motion_fee"
+
+  MULTI_FAMILY:
+    tier_starts:
+      - 0
+      - 100000
+      - 500000
+      - 1000000
+    tier_prices:
+      - 0.02180
+      - 0.01680
+      - 0.01250
+      - 0.00940
+    building_permit_fee: Tiered
+    plan_check_rate: 0.70
+    plan_check_fee: "plan_check_rate*building_permit_fee"
+    coastal_development_permit_fee: 3600
+    park_impact_fee:
+      depends_on: bedroom_count
+      values:
+        0: 2400
+        1: 3400
+        2: 4500
+        3plus: 5650
+    water_connection_fee:
+      depends_on: bedroom_count
+      values:
+        0: 18500
+        1: 22400
+        2: 27800
+        3plus: 33200
+    sewer_connection_fee:
+      depends_on: bedroom_count
+      values:
+        0: 8400
+        1: 10500
+        2: 13200
+        3plus: 15900
+    school_fee: "4.79*gross_sq_ft"
+    strong_motion_fee: "0.00013*project_valuation"
+    total_fee: "building_permit_fee+plan_check_fee+coastal_development_permit_fee+park_impact_fee+water_connection_fee+sewer_connection_fee+school_fee+strong_motion_fee"

@@ -1,0 +1,96 @@
+# Santa Rosa, CA — Housing Permit Fee Schedule
+# Effective: July 1, 2024
+#
+# Source: City of Santa Rosa Planning and Economic Development fee schedule.
+# Note: Values are illustrative. Verify against
+# https://srcity.org/214/Planning-Economic-Development before use.
+---
+metadata:
+  effective_date: 2024-07-01
+  city_name: "Santa Rosa"
+  state: CA
+  fee_currency: USD
+  jurisdiction_type: city
+  source_url: "https://srcity.org/214/Planning-Economic-Development"
+  notes: "Illustrative values. Reflects post-2017 fire rebuilding fee waivers expired."
+
+fee_structure:
+
+  SINGLE_FAMILY:
+    tier_starts:
+      - 0
+      - 25000
+      - 100000
+      - 500000
+      - 1000000
+    tier_prices:
+      - 0.02080
+      - 0.01680
+      - 0.01250
+      - 0.00940
+      - 0.00710
+    building_permit_fee: Tiered
+    plan_check_rate: 0.65
+    plan_check_fee: "plan_check_rate*building_permit_fee"
+    park_impact_fee: 5400
+    transportation_impact_fee: 3650
+    water_connection_fee: 4800
+    sewer_connection_fee: 5950
+    school_fee: "4.79*gross_sq_ft"
+    strong_motion_fee: "0.00013*project_valuation"
+    total_fee: "building_permit_fee+plan_check_fee+park_impact_fee+transportation_impact_fee+water_connection_fee+sewer_connection_fee+school_fee+strong_motion_fee"
+
+  ADU:
+    building_permit_fee: 1250
+    plan_check_fee: "0.65*building_permit_fee"
+    school_fee: "4.79*gross_sq_ft"
+    strong_motion_fee: 22
+    total_fee: "building_permit_fee+plan_check_fee+school_fee+strong_motion_fee"
+
+  MULTI_FAMILY:
+    tier_starts:
+      - 0
+      - 100000
+      - 500000
+      - 1000000
+      - 5000000
+    tier_prices:
+      - 0.01950
+      - 0.01480
+      - 0.01080
+      - 0.00820
+      - 0.00610
+    building_permit_fee: Tiered
+    plan_check_rate: 0.65
+    plan_check_fee: "plan_check_rate*building_permit_fee"
+    park_impact_fee:
+      depends_on: bedroom_count
+      values:
+        0: 2400
+        1: 3450
+        2: 4750
+        3plus: 6050
+    transportation_impact_fee:
+      depends_on: bedroom_count
+      values:
+        0: 1850
+        1: 2550
+        2: 3450
+        3plus: 4350
+    water_connection_fee:
+      depends_on: bedroom_count
+      values:
+        0: 2200
+        1: 2750
+        2: 3500
+        3plus: 4250
+    sewer_connection_fee:
+      depends_on: bedroom_count
+      values:
+        0: 2750
+        1: 3450
+        2: 4350
+        3plus: 5250
+    school_fee: "4.79*gross_sq_ft"
+    strong_motion_fee: "0.00013*project_valuation"
+    total_fee: "building_permit_fee+plan_check_fee+park_impact_fee+transportation_impact_fee+water_connection_fee+sewer_connection_fee+school_fee+strong_motion_fee"

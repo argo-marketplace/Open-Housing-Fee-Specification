@@ -1,0 +1,75 @@
+# Berkeley, CA — Housing Permit Fee Schedule
+# Effective: July 1, 2024
+#
+# Source: City of Berkeley Planning and Development Department fee schedule.
+# Note: Values are illustrative. Verify against
+# https://berkeleyca.gov/your-government/our-work/planning-fees before use.
+---
+metadata:
+  effective_date: 2024-07-01
+  city_name: "Berkeley"
+  state: CA
+  fee_currency: USD
+  jurisdiction_type: city
+  source_url: "https://berkeleyca.gov/your-government/our-work/planning-fees"
+  notes: "Illustrative values. Affordable Housing Mitigation Fee per Berkeley Municipal Code Ch. 22.20."
+
+fee_structure:
+
+  SINGLE_FAMILY:
+    tier_starts:
+      - 0
+      - 25000
+      - 100000
+      - 500000
+      - 1000000
+    tier_prices:
+      - 0.02580
+      - 0.02080
+      - 0.01540
+      - 0.01160
+      - 0.00880
+    building_permit_fee: Tiered
+    plan_check_rate: 0.80
+    plan_check_fee: "plan_check_rate*building_permit_fee"
+    seismic_retrofit_surcharge: "0.00050*project_valuation"
+    strong_motion_fee: "0.00013*project_valuation"
+    green_building_fee: 350
+    records_management_fee: "0.03*building_permit_fee"
+    total_fee: "building_permit_fee+plan_check_fee+seismic_retrofit_surcharge+strong_motion_fee+green_building_fee+records_management_fee"
+
+  ADU:
+    building_permit_fee: 1650
+    plan_check_fee: "0.80*building_permit_fee"
+    school_fee: "4.79*gross_sq_ft"
+    strong_motion_fee: 25
+    total_fee: "building_permit_fee+plan_check_fee+school_fee+strong_motion_fee"
+
+  MULTI_FAMILY:
+    tier_starts:
+      - 0
+      - 100000
+      - 500000
+      - 1000000
+      - 5000000
+    tier_prices:
+      - 0.02380
+      - 0.01820
+      - 0.01340
+      - 0.01010
+      - 0.00740
+    building_permit_fee: Tiered
+    plan_check_rate: 0.80
+    plan_check_fee: "plan_check_rate*building_permit_fee"
+    affordable_housing_mitigation_fee: 37000
+    transportation_impact_fee:
+      depends_on: bedroom_count
+      values:
+        0: 1850
+        1: 2700
+        2: 3850
+        3plus: 5000
+    school_fee: "4.79*gross_sq_ft"
+    strong_motion_fee: "0.00013*project_valuation"
+    seismic_retrofit_surcharge: "0.00050*project_valuation"
+    total_fee: "building_permit_fee+plan_check_fee+affordable_housing_mitigation_fee*unit_count+transportation_impact_fee+school_fee+strong_motion_fee+seismic_retrofit_surcharge"

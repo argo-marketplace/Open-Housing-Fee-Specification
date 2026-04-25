@@ -1,0 +1,102 @@
+# San Diego, CA — Housing Permit Fee Schedule
+# Effective: July 1, 2024
+#
+# Source: City of San Diego Development Services Department fee schedule
+# and Development Impact Fee (DIF) program.
+# Note: Values are illustrative. DIF amounts vary substantially by community
+# planning area; values shown are city-wide approximations. Verify against
+# https://www.sandiego.gov/development-services before use in production.
+---
+metadata:
+  effective_date: 2024-07-01
+  city_name: "San Diego"
+  state: CA
+  fee_currency: USD
+  jurisdiction_type: city
+  source_url: "https://www.sandiego.gov/development-services"
+  notes: "Illustrative values. DIF varies by community planning area."
+
+fee_structure:
+
+  # -----------------------------------------------------------------------
+  # Single-Family Residential
+  # -----------------------------------------------------------------------
+  SINGLE_FAMILY:
+    tier_starts:
+      - 0
+      - 25000
+      - 50000
+      - 100000
+      - 500000
+      - 1000000
+    tier_prices:
+      - 0.02180
+      - 0.01740
+      - 0.01410
+      - 0.01080
+      - 0.00820
+      - 0.00610
+    building_permit_fee: Tiered
+    plan_check_rate: 0.75
+    plan_check_fee: "plan_check_rate*building_permit_fee"
+    strong_motion_fee: "0.00013*project_valuation"
+    green_building_fee: 175
+    affordable_housing_fee: "1.30*gross_sq_ft"
+    total_fee: "building_permit_fee+plan_check_fee+strong_motion_fee+green_building_fee+affordable_housing_fee"
+
+  # -----------------------------------------------------------------------
+  # ADU
+  # -----------------------------------------------------------------------
+  ADU:
+    building_permit_fee: "350+0.85*gross_sq_ft"
+    plan_check_fee: "0.75*building_permit_fee"
+    school_fee: "4.79*gross_sq_ft"
+    strong_motion_fee: 25
+    total_fee: "building_permit_fee+plan_check_fee+school_fee+strong_motion_fee"
+
+  JADU:
+    building_permit_fee: 450
+    plan_check_fee: "0.75*building_permit_fee"
+    total_fee: "building_permit_fee+plan_check_fee"
+
+  # -----------------------------------------------------------------------
+  # Multi-Family Residential
+  # Development Impact Fees vary by community planning area.
+  # -----------------------------------------------------------------------
+  MULTI_FAMILY:
+    tier_starts:
+      - 0
+      - 100000
+      - 500000
+      - 1000000
+      - 5000000
+    tier_prices:
+      - 0.02100
+      - 0.01580
+      - 0.01140
+      - 0.00860
+      - 0.00610
+    building_permit_fee: Tiered
+    plan_check_rate: 0.75
+    plan_check_fee: "plan_check_rate*building_permit_fee"
+    development_impact_fee:
+      depends_on:
+        - planning_area
+        - bedroom_count
+      values:
+        north_city|0: 4500
+        north_city|1: 6300
+        north_city|2: 8800
+        north_city|3plus: 11400
+        mid_city|0: 3200
+        mid_city|1: 4500
+        mid_city|2: 6300
+        mid_city|3plus: 8200
+        south_bay|0: 2400
+        south_bay|1: 3300
+        south_bay|2: 4700
+        south_bay|3plus: 6100
+    school_fee: "4.79*gross_sq_ft"
+    affordable_housing_fee: "2.61*gross_sq_ft"
+    strong_motion_fee: "0.00013*project_valuation"
+    total_fee: "building_permit_fee+plan_check_fee+development_impact_fee+school_fee+affordable_housing_fee+strong_motion_fee"

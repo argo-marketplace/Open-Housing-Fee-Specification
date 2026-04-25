@@ -1,0 +1,100 @@
+# San Francisco, CA — Housing Permit Fee Schedule
+# Effective: July 1, 2024
+#
+# Source: SF Department of Building Inspection (DBI) and SF Planning fee
+# schedule. Includes Inclusionary Housing Fee, TIDF, and Jobs-Housing
+# Linkage Fee per the Planning Code.
+# Note: Values are illustrative. SF impact fees are notoriously complex
+# and depend on Plan Area; the values below approximate citywide rates.
+# Verify against https://sfdbi.org/fee-schedule before use in production.
+---
+metadata:
+  effective_date: 2024-07-01
+  city_name: "San Francisco"
+  state: CA
+  fee_currency: USD
+  jurisdiction_type: city_and_county
+  source_url: "https://sfdbi.org/fee-schedule"
+  notes: "Illustrative values. Excludes plan-area-specific impact fees (Eastern Neighborhoods, Market-Octavia, etc.)."
+
+fee_structure:
+
+  # -----------------------------------------------------------------------
+  # Single-Family Residential
+  # -----------------------------------------------------------------------
+  SINGLE_FAMILY:
+    tier_starts:
+      - 0
+      - 50000
+      - 250000
+      - 1000000
+      - 5000000
+    tier_prices:
+      - 0.02950
+      - 0.02380
+      - 0.01840
+      - 0.01290
+      - 0.00910
+    building_permit_fee: Tiered
+    plan_check_rate: 0.90
+    plan_check_fee: "plan_check_rate*building_permit_fee"
+    strong_motion_fee: "0.00013*project_valuation"
+    seismic_safety_fee: "0.00010*project_valuation"
+    technology_surcharge: "0.07*building_permit_fee"
+    records_retention_fee: "0.005*building_permit_fee"
+    total_fee: "building_permit_fee+plan_check_fee+strong_motion_fee+seismic_safety_fee+technology_surcharge+records_retention_fee"
+
+  # -----------------------------------------------------------------------
+  # ADU
+  # -----------------------------------------------------------------------
+  ADU:
+    building_permit_fee: 2400
+    plan_check_fee: "0.90*building_permit_fee"
+    school_fee: "4.79*gross_sq_ft"
+    strong_motion_fee: 30
+    total_fee: "building_permit_fee+plan_check_fee+school_fee+strong_motion_fee"
+
+  # -----------------------------------------------------------------------
+  # Multi-Family Residential
+  # Inclusionary Housing Fee varies by tier (rental vs. ownership) and
+  # affordability set-aside. Below is the in-lieu fee for rental projects
+  # of 25+ units.
+  # -----------------------------------------------------------------------
+  MULTI_FAMILY:
+    tier_starts:
+      - 0
+      - 250000
+      - 1000000
+      - 5000000
+      - 25000000
+      - 100000000
+    tier_prices:
+      - 0.02750
+      - 0.02180
+      - 0.01620
+      - 0.01180
+      - 0.00880
+      - 0.00640
+    building_permit_fee: Tiered
+    plan_check_rate: 0.90
+    plan_check_fee: "plan_check_rate*building_permit_fee"
+    inclusionary_housing_fee:
+      depends_on:
+        - tenure_type
+        - bedroom_count
+      values:
+        rental|studio: 360
+        rental|1_bedroom: 410
+        rental|2_bedroom: 470
+        rental|3plus_bedroom: 540
+        ownership|studio: 480
+        ownership|1_bedroom: 540
+        ownership|2_bedroom: 620
+        ownership|3plus_bedroom: 720
+    transportation_sustainability_fee: "9.46*gross_sq_ft"
+    jobs_housing_linkage_fee: 0
+    childcare_impact_fee: "1.86*gross_sq_ft"
+    school_fee: "4.79*gross_sq_ft"
+    strong_motion_fee: "0.00013*project_valuation"
+    technology_surcharge: "0.07*building_permit_fee"
+    total_fee: "building_permit_fee+plan_check_fee+inclusionary_housing_fee*gross_sq_ft+transportation_sustainability_fee+childcare_impact_fee+school_fee+strong_motion_fee+technology_surcharge"

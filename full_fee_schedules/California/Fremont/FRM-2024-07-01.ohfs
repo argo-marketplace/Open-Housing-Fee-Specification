@@ -1,0 +1,92 @@
+# Fremont, CA — Housing Permit Fee Schedule
+# Effective: July 1, 2024
+#
+# Source: City of Fremont Community Development Department fee schedule.
+# Note: Values are illustrative. Verify against
+# https://www.fremont.gov/government/departments/community-development before use.
+---
+metadata:
+  effective_date: 2024-07-01
+  city_name: "Fremont"
+  state: CA
+  fee_currency: USD
+  jurisdiction_type: city
+  source_url: "https://www.fremont.gov/government/departments/community-development"
+  notes: "Illustrative values. Excludes Warm Springs/South Fremont Community Plan area-specific fees."
+
+fee_structure:
+
+  SINGLE_FAMILY:
+    tier_starts:
+      - 0
+      - 50000
+      - 100000
+      - 500000
+      - 1000000
+    tier_prices:
+      - 0.02050
+      - 0.01650
+      - 0.01300
+      - 0.00980
+      - 0.00720
+    building_permit_fee: Tiered
+    plan_check_rate: 0.70
+    plan_check_fee: "plan_check_rate*building_permit_fee"
+    park_impact_fee: 8500
+    transportation_impact_fee: 4200
+    fire_impact_fee: 950
+    capital_facilities_fee: 1850
+    school_fee: "4.79*gross_sq_ft"
+    strong_motion_fee: "0.00013*project_valuation"
+    green_building_fee: "0.00007*project_valuation"
+    total_fee: "building_permit_fee+plan_check_fee+park_impact_fee+transportation_impact_fee+fire_impact_fee+capital_facilities_fee+school_fee+strong_motion_fee+green_building_fee"
+
+  ADU:
+    building_permit_fee: 1450
+    plan_check_fee: "0.70*building_permit_fee"
+    school_fee: "4.79*gross_sq_ft"
+    strong_motion_fee: 25
+    total_fee: "building_permit_fee+plan_check_fee+school_fee+strong_motion_fee"
+
+  MULTI_FAMILY:
+    tier_starts:
+      - 0
+      - 100000
+      - 500000
+      - 1000000
+      - 5000000
+    tier_prices:
+      - 0.01950
+      - 0.01480
+      - 0.01080
+      - 0.00820
+      - 0.00610
+    building_permit_fee: Tiered
+    plan_check_rate: 0.70
+    plan_check_fee: "plan_check_rate*building_permit_fee"
+    park_impact_fee:
+      depends_on: bedroom_count
+      values:
+        0: 4200
+        1: 5800
+        2: 7500
+        3plus: 9100
+    transportation_impact_fee:
+      depends_on: bedroom_count
+      values:
+        0: 2150
+        1: 2850
+        2: 3650
+        3plus: 4450
+    fire_impact_fee: 650
+    capital_facilities_fee:
+      depends_on: bedroom_count
+      values:
+        0: 950
+        1: 1250
+        2: 1600
+        3plus: 1950
+    school_fee: "4.79*gross_sq_ft"
+    affordable_housing_fee: "1.10*gross_sq_ft"
+    strong_motion_fee: "0.00013*project_valuation"
+    total_fee: "building_permit_fee+plan_check_fee+park_impact_fee+transportation_impact_fee+fire_impact_fee+capital_facilities_fee+school_fee+affordable_housing_fee+strong_motion_fee"

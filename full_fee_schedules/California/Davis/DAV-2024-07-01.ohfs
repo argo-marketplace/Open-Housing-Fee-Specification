@@ -1,0 +1,92 @@
+# Davis, CA — Housing Permit Fee Schedule
+# Effective: July 1, 2024
+#
+# Source: City of Davis Community Development and Sustainability fee schedule.
+# Note: Values are illustrative. Verify against
+# https://www.cityofdavis.org/city-hall/community-development-and-sustainability
+# before use in production.
+---
+metadata:
+  effective_date: 2024-07-01
+  city_name: "Davis"
+  state: CA
+  fee_currency: USD
+  jurisdiction_type: city
+  source_url: "https://www.cityofdavis.org/city-hall/community-development-and-sustainability"
+  notes: "Illustrative values. School fees collected by Davis Joint Unified School District."
+
+fee_structure:
+
+  SINGLE_FAMILY:
+    tier_starts:
+      - 0
+      - 25000
+      - 100000
+      - 500000
+    tier_prices:
+      - 0.01950
+      - 0.01540
+      - 0.01140
+      - 0.00860
+    building_permit_fee: Tiered
+    plan_check_rate: 0.65
+    plan_check_fee: "plan_check_rate*building_permit_fee"
+    park_impact_fee: 6800
+    transportation_impact_fee: 2950
+    public_facilities_fee: 4200
+    school_fee: "4.79*gross_sq_ft"
+    strong_motion_fee: "0.00013*project_valuation"
+    green_building_fee: 250
+    total_fee: "building_permit_fee+plan_check_fee+park_impact_fee+transportation_impact_fee+public_facilities_fee+school_fee+strong_motion_fee+green_building_fee"
+
+  ADU:
+    building_permit_fee: 1100
+    plan_check_fee: "0.65*building_permit_fee"
+    school_fee: "4.79*gross_sq_ft"
+    strong_motion_fee: 22
+    total_fee: "building_permit_fee+plan_check_fee+school_fee+strong_motion_fee"
+
+  JADU:
+    building_permit_fee: 350
+    plan_check_fee: "0.65*building_permit_fee"
+    total_fee: "building_permit_fee+plan_check_fee"
+
+  MULTI_FAMILY:
+    tier_starts:
+      - 0
+      - 100000
+      - 500000
+      - 1000000
+    tier_prices:
+      - 0.01880
+      - 0.01410
+      - 0.01040
+      - 0.00780
+    building_permit_fee: Tiered
+    plan_check_rate: 0.65
+    plan_check_fee: "plan_check_rate*building_permit_fee"
+    park_impact_fee:
+      depends_on: bedroom_count
+      values:
+        0: 3200
+        1: 4500
+        2: 6100
+        3plus: 7700
+    transportation_impact_fee:
+      depends_on: bedroom_count
+      values:
+        0: 1450
+        1: 2050
+        2: 2750
+        3plus: 3450
+    public_facilities_fee:
+      depends_on: bedroom_count
+      values:
+        0: 2050
+        1: 2900
+        2: 3950
+        3plus: 5000
+    school_fee: "4.79*gross_sq_ft"
+    affordable_housing_fee: 14500
+    strong_motion_fee: "0.00013*project_valuation"
+    total_fee: "building_permit_fee+plan_check_fee+park_impact_fee+transportation_impact_fee+public_facilities_fee+school_fee+affordable_housing_fee*unit_count+strong_motion_fee"
