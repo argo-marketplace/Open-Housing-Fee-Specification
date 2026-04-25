@@ -3,9 +3,9 @@
 #
 # Source: City of San Diego Development Services Department fee schedule
 # and Development Impact Fee (DIF) program.
-# Note: Values are illustrative. DIF amounts vary substantially by community
-# planning area; values shown are city-wide approximations. Verify against
-# https://www.sandiego.gov/development-services before use in production.
+# Note: Fee values in this file have NOT been verified against the official
+# source — it is not clear whether the amounts below reflect the current
+# fee schedule. Confirm against the source URL in metadata before any use.
 ---
 metadata:
   effective_date: 2024-07-01
@@ -14,7 +14,7 @@ metadata:
   fee_currency: USD
   jurisdiction_type: city
   source_url: "https://www.sandiego.gov/development-services"
-  notes: "Illustrative values. DIF varies by community planning area."
+  notes: "UNVERIFIED — fee amounts have not been confirmed against the official fee schedule; it is not clear whether the values below match current rates. DIF varies by community planning area."
 
 fee_structure:
 

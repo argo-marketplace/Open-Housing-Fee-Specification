@@ -3,9 +3,9 @@
 #
 # Source: Los Angeles Department of Building and Safety (LADBS) fee schedule
 # and Department of City Planning fee ordinance.
-# Note: Values are illustrative. Verify against the current official fee
-# resolution at https://www.ladbs.org/services/check-status/fee-schedule
-# before use in production.
+# Note: Fee values in this file have NOT been verified against the official
+# source — it is not clear whether the amounts below reflect the current
+# fee schedule. Confirm against the source URL in metadata before any use.
 ---
 metadata:
   effective_date: 2024-07-01
@@ -14,7 +14,7 @@ metadata:
   fee_currency: USD
   jurisdiction_type: city
   source_url: "https://www.ladbs.org/services/check-status/fee-schedule"
-  notes: "Illustrative values. Excludes Mello-Roos, CFD, and area-specific overlay fees."
+  notes: "UNVERIFIED — fee amounts have not been confirmed against the official fee schedule; it is not clear whether the values below match current rates. Excludes Mello-Roos, CFD, and area-specific overlay fees."
 
 fee_structure:
 

@@ -4,9 +4,9 @@
 # Source: SF Department of Building Inspection (DBI) and SF Planning fee
 # schedule. Includes Inclusionary Housing Fee, TIDF, and Jobs-Housing
 # Linkage Fee per the Planning Code.
-# Note: Values are illustrative. SF impact fees are notoriously complex
-# and depend on Plan Area; the values below approximate citywide rates.
-# Verify against https://sfdbi.org/fee-schedule before use in production.
+# Note: Fee values in this file have NOT been verified against the official
+# source — it is not clear whether the amounts below reflect the current
+# fee schedule. Confirm against the source URL in metadata before any use.
 ---
 metadata:
   effective_date: 2024-07-01
@@ -15,7 +15,7 @@ metadata:
   fee_currency: USD
   jurisdiction_type: city_and_county
   source_url: "https://sfdbi.org/fee-schedule"
-  notes: "Illustrative values. Excludes plan-area-specific impact fees (Eastern Neighborhoods, Market-Octavia, etc.)."
+  notes: "UNVERIFIED — fee amounts have not been confirmed against the official fee schedule; it is not clear whether the values below match current rates. Excludes plan-area-specific impact fees (Eastern Neighborhoods, Market-Octavia, etc.)."
 
 fee_structure:
 

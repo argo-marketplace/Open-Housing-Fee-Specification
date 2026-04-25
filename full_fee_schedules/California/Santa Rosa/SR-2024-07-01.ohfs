@@ -2,8 +2,9 @@
 # Effective: July 1, 2024
 #
 # Source: City of Santa Rosa Planning and Economic Development fee schedule.
-# Note: Values are illustrative. Verify against
-# https://srcity.org/214/Planning-Economic-Development before use.
+# Note: Fee values in this file have NOT been verified against the official
+# source — it is not clear whether the amounts below reflect the current
+# fee schedule. Confirm against the source URL in metadata before any use.
 ---
 metadata:
   effective_date: 2024-07-01
@@ -12,7 +13,7 @@ metadata:
   fee_currency: USD
   jurisdiction_type: city
   source_url: "https://srcity.org/214/Planning-Economic-Development"
-  notes: "Illustrative values. Reflects post-2017 fire rebuilding fee waivers expired."
+  notes: "UNVERIFIED — fee amounts have not been confirmed against the official fee schedule; it is not clear whether the values below match current rates. Reflects post-2017 fire rebuilding fee waivers expired."
 
 fee_structure:
 

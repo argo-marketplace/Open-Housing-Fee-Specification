@@ -2,8 +2,13 @@
 # Effective: July 1, 2024
 #
 # Source: City of Berkeley Planning and Development Department fee schedule.
-# Note: Values are illustrative. Verify against
+# Note: Fee values in this file have NOT been verified against the official
+# source — it is not clear whether the amounts below reflect the current
+# Berkeley fee schedule. Confirm against
 # https://berkeleyca.gov/your-government/our-work/planning-fees before use.
+# Berkeley's actual schedule (effective July 1, 2025) is known to use flat
+# fees by square-footage threshold for ADUs and a per-$100-valuation rate
+# for the building permit; that structure is not yet captured here.
 ---
 metadata:
   effective_date: 2024-07-01
@@ -12,7 +17,7 @@ metadata:
   fee_currency: USD
   jurisdiction_type: city
   source_url: "https://berkeleyca.gov/your-government/our-work/planning-fees"
-  notes: "Illustrative values. Affordable Housing Mitigation Fee per Berkeley Municipal Code Ch. 22.20."
+  notes: "UNVERIFIED — fee amounts have not been confirmed against the official Berkeley fee schedule. The real schedule uses square-footage-threshold flat fees for ADUs, which this file does not yet model. Affordable Housing Mitigation Fee referenced under Berkeley Municipal Code Ch. 22.20."
 
 fee_structure:
 

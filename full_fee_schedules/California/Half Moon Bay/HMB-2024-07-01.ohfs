@@ -2,8 +2,9 @@
 # Effective: July 1, 2024
 #
 # Source: City of Half Moon Bay Community Development Department fee schedule.
-# Note: Values are illustrative. Verify against
-# https://www.hmbcity.com/170/Planning before use in production.
+# Note: Fee values in this file have NOT been verified against the official
+# source — it is not clear whether the amounts below reflect the current
+# fee schedule. Confirm against the source URL in metadata before any use.
 ---
 metadata:
   effective_date: 2024-07-01
@@ -12,7 +13,7 @@ metadata:
   fee_currency: USD
   jurisdiction_type: city
   source_url: "https://www.hmbcity.com/170/Planning"
-  notes: "Illustrative values. Coastal Development Permit required separately for projects in coastal zone."
+  notes: "UNVERIFIED — fee amounts have not been confirmed against the official fee schedule; it is not clear whether the values below match current rates. Coastal Development Permit required separately for projects in coastal zone."
 
 fee_structure:
 

@@ -2,9 +2,9 @@
 # Effective: July 1, 2024
 #
 # Source: City of Davis Community Development and Sustainability fee schedule.
-# Note: Values are illustrative. Verify against
-# https://www.cityofdavis.org/city-hall/community-development-and-sustainability
-# before use in production.
+# Note: Fee values in this file have NOT been verified against the official
+# source — it is not clear whether the amounts below reflect the current
+# fee schedule. Confirm against the source URL in metadata before any use.
 ---
 metadata:
   effective_date: 2024-07-01
@@ -13,7 +13,7 @@ metadata:
   fee_currency: USD
   jurisdiction_type: city
   source_url: "https://www.cityofdavis.org/city-hall/community-development-and-sustainability"
-  notes: "Illustrative values. School fees collected by Davis Joint Unified School District."
+  notes: "UNVERIFIED — fee amounts have not been confirmed against the official fee schedule; it is not clear whether the values below match current rates. School fees collected by Davis Joint Unified School District."
 
 fee_structure:
 
