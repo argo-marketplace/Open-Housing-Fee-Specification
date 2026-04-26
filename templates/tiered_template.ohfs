@@ -1,8 +1,9 @@
 # OHFS template for fees tiered by project valuation or square footage.
 #
-# Use this template when a fee component (commonly building_permit_fee)
-# is calculated by applying different rates to successive bands of a
-# continuous input variable such as project_valuation or gross_sq_ft.
+# Use `marginal_tiered` for the common case where each band of the driver
+# is charged at its own rate and the total is the sum across bands.
+# Use `block_tiered` if the city instead picks one rate based on which
+# band the driver falls in and applies it to the whole driver value.
 #
 # Notation:
 #   {value}  — substitute from fee schedule source
@@ -10,6 +11,7 @@
 #   (value)  — fill in as appropriate
 ---
 metadata:
+  ohfs_version: "0.2"
   effective_date: [YYYY-MM-DD]
   city_name: [city name]
   state: CA
@@ -18,20 +20,16 @@ metadata:
 
 fee_structure:
   {permit_class}:
-    tier_starts:          # lower bound of each tier (in dollars of project_valuation,
-      - (tier_1_start)    # or square feet if tiering by gross_sq_ft)
-      - (tier_2_start)
-      - (tier_3_start)
-      - (tier_4_start)
-      - (tier_5_start)
-      # add more tiers as needed
-    tier_prices:          # rate applied within each tier
-      - (tier_1_price)    # for valuation tiers: dollars per dollar of project_valuation
-      - (tier_2_price)    # for sq ft tiers: dollars per square foot
-      - (tier_3_price)
-      - (tier_4_price)
-      - (tier_5_price)
-    [building_permit_fee]: Tiered
-    plan_check_rate: (rate)                             # e.g. 0.65 for 65%
-    plan_check_fee: "plan_check_rate*building_permit_fee"
+    [building_permit_fee]:
+      type: marginal_tiered            # or block_tiered
+      driver: project_valuation        # or gross_sq_ft, etc.
+      tiers:
+        - {from: 0,        rate: (rate_for_first_band)}
+        - {from: (cutoff), rate: (rate_for_next_band)}
+        - {from: (cutoff), rate: (rate_for_next_band)}
+        # add more tiers as needed
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: (rate)                     # e.g. 0.65 for 65%
     [total_fee]: "building_permit_fee+plan_check_fee"

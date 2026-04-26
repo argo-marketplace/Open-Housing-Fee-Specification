@@ -1,0 +1,116 @@
+# Mountain View, CA — Housing Permit Fee Schedule
+# Effective: July 1, 2024
+#
+# Source: City of Mountain View Community Development Department fee schedule.
+# Note: Fee values in this file have NOT been verified against the official
+# source — it is not clear whether the amounts below reflect the current
+# fee schedule. Confirm against the source URL in metadata before any use.
+---
+metadata:
+  ohfs_version: "0.2"
+  effective_date: 2024-07-01
+  city_name: "Mountain View"
+  state: CA
+  fee_currency: USD
+  jurisdiction_type: city
+  source_url: "https://www.mountainview.gov/depts/comdev/"
+  notes: "UNVERIFIED — fee amounts have not been confirmed against the official fee schedule. North Bayshore Precise Plan area has supplementary impact fees not reflected here."
+
+fee_structure:
+
+  SINGLE_FAMILY:
+    building_permit_fee:
+      type: marginal_tiered
+      driver: project_valuation
+      tiers:
+        - {from: 0,       rate: 0.02250}
+        - {from: 50000,   rate: 0.01780}
+        - {from: 250000,  rate: 0.01340}
+        - {from: 1000000, rate: 0.00980}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.75
+    park_land_dedication_fee: 14500
+    strong_motion_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00013
+    green_building_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00010
+    technology_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.04
+    total_fee: "building_permit_fee+plan_check_fee+park_land_dedication_fee+strong_motion_fee+green_building_fee+technology_fee"
+
+  ADU:
+    building_permit_fee:
+      type: step
+      driver: gross_sq_ft
+      steps:
+        - {up_to: 750,  amount: 1750}
+        - {up_to: 1000, amount: 2300}
+        - {up_to: null, amount: 3000}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.75
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+      applies_if: "gross_sq_ft > 500"
+    strong_motion_fee: 28
+    total_fee: "building_permit_fee+plan_check_fee+school_fee+strong_motion_fee"
+
+  MULTI_FAMILY:
+    building_permit_fee:
+      type: marginal_tiered
+      driver: project_valuation
+      tiers:
+        - {from: 0,       rate: 0.02100}
+        - {from: 250000,  rate: 0.01620}
+        - {from: 1000000, rate: 0.01180}
+        - {from: 5000000, rate: 0.00860}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.75
+    affordable_housing_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 25.00
+    park_land_dedication_fee:
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
+      values:
+        "0":     8200
+        "1":     11400
+        "2":     15800
+        "3plus": 20100
+    transportation_impact_fee:
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
+      values:
+        "0":     3850
+        "1":     5200
+        "2":     7100
+        "3plus": 8950
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+    strong_motion_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00013
+    technology_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.04
+    total_fee: "building_permit_fee+plan_check_fee+affordable_housing_fee+park_land_dedication_fee+transportation_impact_fee+school_fee+strong_motion_fee+technology_fee"

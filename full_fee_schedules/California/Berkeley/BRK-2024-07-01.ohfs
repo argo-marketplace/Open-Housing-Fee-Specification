@@ -1,0 +1,120 @@
+# Berkeley, CA — Housing Permit Fee Schedule
+# Effective: July 1, 2024
+#
+# Source: City of Berkeley Planning and Development Department fee schedule.
+# Note: Fee values in this file have NOT been verified against the official
+# source — it is not clear whether the amounts below reflect the current
+# Berkeley fee schedule. Confirm against
+# https://berkeleyca.gov/your-government/our-work/planning-fees before use.
+# The actual Berkeley schedule (effective July 1, 2025) uses flat fees by
+# square-footage threshold for ADUs and a per-$100-of-valuation rate for
+# the building permit; the structure modeled here matches that shape but
+# the dollar amounts and thresholds have not been verified.
+---
+metadata:
+  ohfs_version: "0.2"
+  effective_date: 2024-07-01
+  city_name: "Berkeley"
+  state: CA
+  fee_currency: USD
+  jurisdiction_type: city
+  source_url: "https://berkeleyca.gov/your-government/our-work/planning-fees"
+  notes: "UNVERIFIED — fee amounts have not been confirmed against the official Berkeley fee schedule. ADU step thresholds and amounts modeled after the Berkeley pattern but unverified."
+
+fee_structure:
+
+  # -----------------------------------------------------------------------
+  # Single-Family Residential
+  # Berkeley charges a flat base permit fee plus a per-$100-of-valuation
+  # rate above a $3,000 valuation threshold; modeled here as a `linear`
+  # over project_valuation with a base.
+  # -----------------------------------------------------------------------
+  SINGLE_FAMILY:
+    building_permit_fee:
+      type: linear
+      driver: project_valuation
+      base: 150
+      rate: 0.024     # $2.40 per $100 of valuation
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.80
+    seismic_retrofit_surcharge:
+      type: linear
+      driver: project_valuation
+      rate: 0.00050
+    strong_motion_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00013
+    green_building_fee: 350
+    records_management_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.03
+    total_fee: "building_permit_fee+plan_check_fee+seismic_retrofit_surcharge+strong_motion_fee+green_building_fee+records_management_fee"
+
+  # -----------------------------------------------------------------------
+  # ADU — flat fees by square-footage threshold (the headline new pattern).
+  # -----------------------------------------------------------------------
+  ADU:
+    building_permit_fee:
+      type: step
+      driver: gross_sq_ft
+      steps:
+        - {up_to: 750,  amount: 1650}
+        - {up_to: 1000, amount: 2200}
+        - {up_to: null, amount: 2950}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.80
+    adu_notice_fee: 500
+    address_assignment_fee: 250
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+      applies_if: "gross_sq_ft > 500"      # state law: <= 500 sf JADUs/ADUs are exempt
+    strong_motion_fee: 25
+    total_fee: "building_permit_fee+plan_check_fee+adu_notice_fee+address_assignment_fee+school_fee+strong_motion_fee"
+
+  # -----------------------------------------------------------------------
+  # Multi-Family Residential
+  # -----------------------------------------------------------------------
+  MULTI_FAMILY:
+    building_permit_fee:
+      type: linear
+      driver: project_valuation
+      base: 150
+      rate: 0.024
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.80
+    affordable_housing_mitigation_fee:
+      type: flat
+      amount: 37000
+      scope: per_unit
+    transportation_impact_fee:
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
+      values:
+        "0":     1850
+        "1":     2700
+        "2":     3850
+        "3plus": 5000
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+    strong_motion_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00013
+    seismic_retrofit_surcharge:
+      type: linear
+      driver: project_valuation
+      rate: 0.00050
+    total_fee: "building_permit_fee+plan_check_fee+affordable_housing_mitigation_fee+transportation_impact_fee+school_fee+strong_motion_fee+seismic_retrofit_surcharge"

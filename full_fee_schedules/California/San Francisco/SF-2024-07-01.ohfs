@@ -1,0 +1,123 @@
+# San Francisco, CA — Housing Permit Fee Schedule
+# Effective: July 1, 2024
+#
+# Source: SF Department of Building Inspection (DBI) and SF Planning fee
+# schedule. Includes Inclusionary Housing Fee, Transportation Sustainability
+# Fee, and child care impact fee per the Planning Code.
+# Note: Fee values in this file have NOT been verified against the official
+# source — it is not clear whether the amounts below reflect the current
+# fee schedule. Confirm against the source URL in metadata before any use.
+---
+metadata:
+  ohfs_version: "0.2"
+  effective_date: 2024-07-01
+  city_name: "San Francisco"
+  state: CA
+  fee_currency: USD
+  jurisdiction_type: city_and_county
+  source_url: "https://sfdbi.org/fee-schedule"
+  notes: "UNVERIFIED — fee amounts have not been confirmed against the official fee schedule. Excludes plan-area-specific impact fees (Eastern Neighborhoods, Market-Octavia, etc.)."
+
+fee_structure:
+
+  SINGLE_FAMILY:
+    building_permit_fee:
+      type: marginal_tiered
+      driver: project_valuation
+      tiers:
+        - {from: 0,       rate: 0.02950}
+        - {from: 50000,   rate: 0.02380}
+        - {from: 250000,  rate: 0.01840}
+        - {from: 1000000, rate: 0.01290}
+        - {from: 5000000, rate: 0.00910}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.90
+    strong_motion_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00013
+    seismic_safety_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00010
+    technology_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.07
+    records_retention_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.005
+    total_fee: "building_permit_fee+plan_check_fee+strong_motion_fee+seismic_safety_fee+technology_fee+records_retention_fee"
+
+  ADU:
+    building_permit_fee:
+      type: step
+      driver: gross_sq_ft
+      steps:
+        - {up_to: 750,  amount: 2400}
+        - {up_to: 1000, amount: 3100}
+        - {up_to: null, amount: 4000}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.90
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+      applies_if: "gross_sq_ft > 500"
+    strong_motion_fee: 30
+    total_fee: "building_permit_fee+plan_check_fee+school_fee+strong_motion_fee"
+
+  MULTI_FAMILY:
+    building_permit_fee:
+      type: marginal_tiered
+      driver: project_valuation
+      tiers:
+        - {from: 0,         rate: 0.02750}
+        - {from: 250000,    rate: 0.02180}
+        - {from: 1000000,   rate: 0.01620}
+        - {from: 5000000,   rate: 0.01180}
+        - {from: 25000000,  rate: 0.00880}
+        - {from: 100000000, rate: 0.00640}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.90
+    inclusionary_housing_fee:
+      type: categorical
+      drivers: [tenure_type, bedroom_count]
+      scope: per_sqft
+      values:
+        "rental|studio":          360
+        "rental|1_bedroom":       410
+        "rental|2_bedroom":       470
+        "rental|3plus_bedroom":   540
+        "ownership|studio":       480
+        "ownership|1_bedroom":    540
+        "ownership|2_bedroom":    620
+        "ownership|3plus_bedroom": 720
+    transportation_sustainability_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 9.46
+    childcare_impact_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 1.86
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+    strong_motion_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00013
+    technology_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.07
+    total_fee: "building_permit_fee+plan_check_fee+inclusionary_housing_fee+transportation_sustainability_fee+childcare_impact_fee+school_fee+strong_motion_fee+technology_fee"

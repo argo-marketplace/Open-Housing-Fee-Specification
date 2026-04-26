@@ -1,0 +1,128 @@
+# Davis, CA — Housing Permit Fee Schedule
+# Effective: July 1, 2024
+#
+# Source: City of Davis Community Development and Sustainability fee schedule.
+# Note: Fee values in this file have NOT been verified against the official
+# source — it is not clear whether the amounts below reflect the current
+# fee schedule. Confirm against the source URL in metadata before any use.
+---
+metadata:
+  ohfs_version: "0.2"
+  effective_date: 2024-07-01
+  city_name: "Davis"
+  state: CA
+  fee_currency: USD
+  jurisdiction_type: city
+  source_url: "https://www.cityofdavis.org/city-hall/community-development-and-sustainability"
+  notes: "UNVERIFIED — fee amounts have not been confirmed against the official fee schedule. School fees collected by Davis Joint Unified School District."
+
+fee_structure:
+
+  SINGLE_FAMILY:
+    building_permit_fee:
+      type: marginal_tiered
+      driver: project_valuation
+      tiers:
+        - {from: 0,      rate: 0.01950}
+        - {from: 25000,  rate: 0.01540}
+        - {from: 100000, rate: 0.01140}
+        - {from: 500000, rate: 0.00860}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.65
+    park_impact_fee: 6800
+    transportation_impact_fee: 2950
+    public_facilities_fee: 4200
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+    strong_motion_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00013
+    green_building_fee: 250
+    total_fee: "building_permit_fee+plan_check_fee+park_impact_fee+transportation_impact_fee+public_facilities_fee+school_fee+strong_motion_fee+green_building_fee"
+
+  ADU:
+    building_permit_fee:
+      type: step
+      driver: gross_sq_ft
+      steps:
+        - {up_to: 750,  amount: 1100}
+        - {up_to: 1000, amount: 1500}
+        - {up_to: null, amount: 2000}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.65
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+      applies_if: "gross_sq_ft > 500"
+    strong_motion_fee: 22
+    total_fee: "building_permit_fee+plan_check_fee+school_fee+strong_motion_fee"
+
+  JADU:
+    building_permit_fee: 350
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.65
+    total_fee: "building_permit_fee+plan_check_fee"
+
+  MULTI_FAMILY:
+    building_permit_fee:
+      type: marginal_tiered
+      driver: project_valuation
+      tiers:
+        - {from: 0,       rate: 0.01880}
+        - {from: 100000,  rate: 0.01410}
+        - {from: 500000,  rate: 0.01040}
+        - {from: 1000000, rate: 0.00780}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.65
+    park_impact_fee:
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
+      values:
+        "0":     3200
+        "1":     4500
+        "2":     6100
+        "3plus": 7700
+    transportation_impact_fee:
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
+      values:
+        "0":     1450
+        "1":     2050
+        "2":     2750
+        "3plus": 3450
+    public_facilities_fee:
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
+      values:
+        "0":     2050
+        "1":     2900
+        "2":     3950
+        "3plus": 5000
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+    affordable_housing_fee:
+      type: flat
+      amount: 14500
+      scope: per_unit
+    strong_motion_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00013
+    total_fee: "building_permit_fee+plan_check_fee+park_impact_fee+transportation_impact_fee+public_facilities_fee+school_fee+affordable_housing_fee+strong_motion_fee"

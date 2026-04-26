@@ -6,6 +6,7 @@
 # resolution at https://www.longbeach.gov/lbds/ before use in production.
 ---
 metadata:
+  ohfs_version: "0.2"
   effective_date: 2024-07-01
   city_name: "Long Beach"
   state: CA
@@ -15,99 +16,112 @@ metadata:
 fee_structure:
 
   # -----------------------------------------------------------------------
-  # Single-Family Residential (new construction and major additions)
+  # Single-Family Residential
   # -----------------------------------------------------------------------
   SINGLE_FAMILY:
-    # Building permit fee tiered by project valuation ($ per $ of valuation)
-    tier_starts:
-      - 0
-      - 2000
-      - 25000
-      - 50000
-      - 100000
-      - 500000
-      - 1000000
-    tier_prices:
-      - 0.02400
-      - 0.01960
-      - 0.01480
-      - 0.01210
-      - 0.00960
-      - 0.00720
-      - 0.00580
-    building_permit_fee: Tiered
-    plan_check_rate: 0.65
-    plan_check_fee: "plan_check_rate*building_permit_fee"
-    strong_motion_fee: "0.00010*project_valuation"
-    green_building_fee: "0.00005*project_valuation"
-    technology_surcharge: "0.04*building_permit_fee"
-    total_fee: "building_permit_fee+plan_check_fee+strong_motion_fee+green_building_fee+technology_surcharge"
+    building_permit_fee:
+      type: marginal_tiered
+      driver: project_valuation
+      tiers:
+        - {from: 0,       rate: 0.02400}
+        - {from: 2000,    rate: 0.01960}
+        - {from: 25000,   rate: 0.01480}
+        - {from: 50000,   rate: 0.01210}
+        - {from: 100000,  rate: 0.00960}
+        - {from: 500000,  rate: 0.00720}
+        - {from: 1000000, rate: 0.00580}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.65
+    strong_motion_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00010
+    green_building_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00005
+    technology_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.04
+    total_fee: "building_permit_fee+plan_check_fee+strong_motion_fee+green_building_fee+technology_fee"
 
   # -----------------------------------------------------------------------
-  # Accessory Dwelling Unit (ADU)
-  # Fees reflect AB 68 / SB 9 streamlining requirements.
-  # Building permit and plan check fees are a flat rate for ADUs ≤ 750 sq ft;
-  # larger ADUs use the standard SINGLE_FAMILY valuation-based schedule.
+  # ADU — flat permit fee (state law shapes the cost structure for
+  # ADUs <= 750 sq ft).
   # -----------------------------------------------------------------------
   ADU:
     building_permit_fee: 1500
-    plan_check_fee: "0.65*building_permit_fee"
-    school_fee: "2.97*gross_sq_ft"
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.65
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 2.97
     strong_motion_fee: 25
     total_fee: "building_permit_fee+plan_check_fee+school_fee+strong_motion_fee"
 
-  # -----------------------------------------------------------------------
-  # Junior Accessory Dwelling Unit (JADU)
-  # State law limits fees on JADUs (converted from existing space, ≤ 500 sq ft).
-  # -----------------------------------------------------------------------
   JADU:
     building_permit_fee: 500
-    plan_check_fee: "0.65*building_permit_fee"
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.65
     total_fee: "building_permit_fee+plan_check_fee"
 
   # -----------------------------------------------------------------------
   # Multi-Family Residential (5+ units)
   # -----------------------------------------------------------------------
   MULTI_FAMILY:
-    # Building permit fee tiered by project valuation
-    tier_starts:
-      - 0
-      - 25000
-      - 50000
-      - 100000
-      - 500000
-      - 1000000
-      - 5000000
-    tier_prices:
-      - 0.02400
-      - 0.01960
-      - 0.01480
-      - 0.01210
-      - 0.00960
-      - 0.00720
-      - 0.00520
-    building_permit_fee: Tiered
-    plan_check_rate: 0.65
-    plan_check_fee: "plan_check_rate*building_permit_fee"
-    # Transportation impact fee varies by bedroom count (per unit)
+    building_permit_fee:
+      type: marginal_tiered
+      driver: project_valuation
+      tiers:
+        - {from: 0,       rate: 0.02400}
+        - {from: 25000,   rate: 0.01960}
+        - {from: 50000,   rate: 0.01480}
+        - {from: 100000,  rate: 0.01210}
+        - {from: 500000,  rate: 0.00960}
+        - {from: 1000000, rate: 0.00720}
+        - {from: 5000000, rate: 0.00520}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.65
     transportation_impact_fee:
-      depends_on: bedroom_count
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
       values:
-        0: 2100
-        1: 3200
-        2: 4500
-        3: 5800
-        4plus: 7200
-    # Park impact fee varies by bedroom count (per unit)
+        "0":     2100
+        "1":     3200
+        "2":     4500
+        "3":     5800
+        "4plus": 7200
     park_impact_fee:
-      depends_on: bedroom_count
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
       values:
-        0: 850
-        1: 1400
-        2: 2100
-        3: 2800
-        4plus: 3500
-    school_fee: "3.97*gross_sq_ft"
-    strong_motion_fee: "0.00010*project_valuation"
-    technology_surcharge: "0.04*building_permit_fee"
-    total_fee: "building_permit_fee+plan_check_fee+transportation_impact_fee+park_impact_fee+school_fee+strong_motion_fee+technology_surcharge"
+        "0":     850
+        "1":     1400
+        "2":     2100
+        "3":     2800
+        "4plus": 3500
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 3.97
+    strong_motion_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00010
+    technology_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.04
+    total_fee: "building_permit_fee+plan_check_fee+transportation_impact_fee+park_impact_fee+school_fee+strong_motion_fee+technology_fee"

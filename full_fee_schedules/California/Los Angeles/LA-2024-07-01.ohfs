@@ -1,0 +1,147 @@
+# Los Angeles, CA — Housing Permit Fee Schedule
+# Effective: July 1, 2024
+#
+# Source: Los Angeles Department of Building and Safety (LADBS) fee schedule
+# and Department of City Planning fee ordinance.
+# Note: Fee values in this file have NOT been verified against the official
+# source — it is not clear whether the amounts below reflect the current
+# fee schedule. Confirm against the source URL in metadata before any use.
+---
+metadata:
+  ohfs_version: "0.2"
+  effective_date: 2024-07-01
+  city_name: "Los Angeles"
+  state: CA
+  fee_currency: USD
+  jurisdiction_type: city
+  source_url: "https://www.ladbs.org/services/check-status/fee-schedule"
+  notes: "UNVERIFIED — fee amounts have not been confirmed against the official fee schedule. Excludes Mello-Roos, CFD, and area-specific overlay fees."
+
+fee_structure:
+
+  SINGLE_FAMILY:
+    building_permit_fee:
+      type: marginal_tiered
+      driver: project_valuation
+      tiers:
+        - {from: 0,        rate: 0.02250}
+        - {from: 25000,    rate: 0.01880}
+        - {from: 50000,    rate: 0.01510}
+        - {from: 100000,   rate: 0.01180}
+        - {from: 500000,   rate: 0.00890}
+        - {from: 1000000,  rate: 0.00710}
+        - {from: 5000000,  rate: 0.00540}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.85
+    systems_development_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.0070
+    strong_motion_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00013
+    green_building_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00013
+    technology_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.07
+    general_plan_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.05
+    total_fee: "building_permit_fee+plan_check_fee+systems_development_fee+strong_motion_fee+green_building_fee+technology_fee+general_plan_fee"
+
+  ADU:
+    building_permit_fee:
+      type: step
+      driver: gross_sq_ft
+      steps:
+        - {up_to: 750,  amount: 1850}
+        - {up_to: 1000, amount: 2400}
+        - {up_to: null, amount: 3100}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.85
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+      applies_if: "gross_sq_ft > 500"
+    strong_motion_fee: 30
+    technology_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.07
+    total_fee: "building_permit_fee+plan_check_fee+school_fee+strong_motion_fee+technology_fee"
+
+  JADU:
+    building_permit_fee: 600
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.85
+    total_fee: "building_permit_fee+plan_check_fee"
+
+  MULTI_FAMILY:
+    building_permit_fee:
+      type: marginal_tiered
+      driver: project_valuation
+      tiers:
+        - {from: 0,         rate: 0.02100}
+        - {from: 100000,    rate: 0.01650}
+        - {from: 500000,    rate: 0.01180}
+        - {from: 1000000,   rate: 0.00880}
+        - {from: 5000000,   rate: 0.00640}
+        - {from: 25000000,  rate: 0.00480}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.85
+    affordable_housing_linkage_fee:
+      type: categorical
+      driver: market_area
+      scope: per_sqft
+      values:
+        "high":   15.00
+        "medium": 12.00
+        "low":     8.00
+    transportation_impact_fee:
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
+      values:
+        "0":     2950
+        "1":     4100
+        "2":     5800
+        "3":     7500
+        "4plus": 9200
+    park_impact_fee:
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
+      values:
+        "0":     1100
+        "1":     1800
+        "2":     2700
+        "3":     3600
+        "4plus": 4500
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+    strong_motion_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00013
+    technology_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.07
+    total_fee: "building_permit_fee+plan_check_fee+affordable_housing_linkage_fee+transportation_impact_fee+park_impact_fee+school_fee+strong_motion_fee+technology_fee"

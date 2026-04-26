@@ -1,0 +1,114 @@
+# Pasadena, CA — Housing Permit Fee Schedule
+# Effective: July 1, 2024
+#
+# Source: City of Pasadena Planning and Community Development fee schedule.
+# Note: Fee values in this file have NOT been verified against the official
+# source — it is not clear whether the amounts below reflect the current
+# fee schedule. Confirm against the source URL in metadata before any use.
+---
+metadata:
+  ohfs_version: "0.2"
+  effective_date: 2024-07-01
+  city_name: "Pasadena"
+  state: CA
+  fee_currency: USD
+  jurisdiction_type: city
+  source_url: "https://www.cityofpasadena.net/planning"
+  notes: "UNVERIFIED — fee amounts have not been confirmed against the official fee schedule. Inclusionary in-lieu fees apply to projects of 10+ units."
+
+fee_structure:
+
+  SINGLE_FAMILY:
+    building_permit_fee:
+      type: marginal_tiered
+      driver: project_valuation
+      tiers:
+        - {from: 0,       rate: 0.02340}
+        - {from: 25000,   rate: 0.01880}
+        - {from: 100000,  rate: 0.01400}
+        - {from: 500000,  rate: 0.01060}
+        - {from: 1000000, rate: 0.00800}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.65
+    strong_motion_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00013
+    green_building_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00007
+    technology_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.04
+    total_fee: "building_permit_fee+plan_check_fee+strong_motion_fee+green_building_fee+technology_fee"
+
+  ADU:
+    building_permit_fee:
+      type: step
+      driver: gross_sq_ft
+      steps:
+        - {up_to: 750,  amount: 1550}
+        - {up_to: 1000, amount: 2050}
+        - {up_to: null, amount: 2700}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.65
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+      applies_if: "gross_sq_ft > 500"
+    strong_motion_fee: 25
+    total_fee: "building_permit_fee+plan_check_fee+school_fee+strong_motion_fee"
+
+  MULTI_FAMILY:
+    building_permit_fee:
+      type: marginal_tiered
+      driver: project_valuation
+      tiers:
+        - {from: 0,       rate: 0.02340}
+        - {from: 50000,   rate: 0.01880}
+        - {from: 250000,  rate: 0.01400}
+        - {from: 1000000, rate: 0.01060}
+        - {from: 5000000, rate: 0.00800}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.65
+    inclusionary_in_lieu_fee:
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
+      applies_if: "unit_count >= 10"
+      values:
+        "0":     21500
+        "1":     28500
+        "2":     35200
+        "3plus": 41800
+    transportation_impact_fee:
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
+      values:
+        "0":     1750
+        "1":     2450
+        "2":     3450
+        "3plus": 4400
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+    strong_motion_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00013
+    technology_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.04
+    total_fee: "building_permit_fee+plan_check_fee+inclusionary_in_lieu_fee+transportation_impact_fee+school_fee+strong_motion_fee+technology_fee"

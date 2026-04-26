@@ -1,0 +1,130 @@
+# Fremont, CA — Housing Permit Fee Schedule
+# Effective: July 1, 2024
+#
+# Source: City of Fremont Community Development Department fee schedule.
+# Note: Fee values in this file have NOT been verified against the official
+# source — it is not clear whether the amounts below reflect the current
+# fee schedule. Confirm against the source URL in metadata before any use.
+---
+metadata:
+  ohfs_version: "0.2"
+  effective_date: 2024-07-01
+  city_name: "Fremont"
+  state: CA
+  fee_currency: USD
+  jurisdiction_type: city
+  source_url: "https://www.fremont.gov/government/departments/community-development"
+  notes: "UNVERIFIED — fee amounts have not been confirmed against the official fee schedule. Excludes Warm Springs/South Fremont Community Plan area-specific fees."
+
+fee_structure:
+
+  SINGLE_FAMILY:
+    building_permit_fee:
+      type: marginal_tiered
+      driver: project_valuation
+      tiers:
+        - {from: 0,       rate: 0.02050}
+        - {from: 50000,   rate: 0.01650}
+        - {from: 100000,  rate: 0.01300}
+        - {from: 500000,  rate: 0.00980}
+        - {from: 1000000, rate: 0.00720}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.70
+    park_impact_fee: 8500
+    transportation_impact_fee: 4200
+    fire_impact_fee: 950
+    capital_facilities_fee: 1850
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+    strong_motion_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00013
+    green_building_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00007
+    total_fee: "building_permit_fee+plan_check_fee+park_impact_fee+transportation_impact_fee+fire_impact_fee+capital_facilities_fee+school_fee+strong_motion_fee+green_building_fee"
+
+  ADU:
+    building_permit_fee:
+      type: step
+      driver: gross_sq_ft
+      steps:
+        - {up_to: 750,  amount: 1450}
+        - {up_to: 1000, amount: 1900}
+        - {up_to: null, amount: 2500}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.70
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+      applies_if: "gross_sq_ft > 500"
+    strong_motion_fee: 25
+    total_fee: "building_permit_fee+plan_check_fee+school_fee+strong_motion_fee"
+
+  MULTI_FAMILY:
+    building_permit_fee:
+      type: marginal_tiered
+      driver: project_valuation
+      tiers:
+        - {from: 0,       rate: 0.01950}
+        - {from: 100000,  rate: 0.01480}
+        - {from: 500000,  rate: 0.01080}
+        - {from: 1000000, rate: 0.00820}
+        - {from: 5000000, rate: 0.00610}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.70
+    park_impact_fee:
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
+      values:
+        "0":     4200
+        "1":     5800
+        "2":     7500
+        "3plus": 9100
+    transportation_impact_fee:
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
+      values:
+        "0":     2150
+        "1":     2850
+        "2":     3650
+        "3plus": 4450
+    fire_impact_fee:
+      type: flat
+      amount: 650
+      scope: per_unit
+    capital_facilities_fee:
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
+      values:
+        "0":     950
+        "1":     1250
+        "2":     1600
+        "3plus": 1950
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+    affordable_housing_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 1.10
+    strong_motion_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00013
+    total_fee: "building_permit_fee+plan_check_fee+park_impact_fee+transportation_impact_fee+fire_impact_fee+capital_facilities_fee+school_fee+affordable_housing_fee+strong_motion_fee"
