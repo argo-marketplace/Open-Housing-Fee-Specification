@@ -6,75 +6,115 @@
 # source — it is not clear whether the amounts below reflect the current
 # Berkeley fee schedule. Confirm against
 # https://berkeleyca.gov/your-government/our-work/planning-fees before use.
-# Berkeley's actual schedule (effective July 1, 2025) is known to use flat
-# fees by square-footage threshold for ADUs and a per-$100-valuation rate
-# for the building permit; that structure is not yet captured here.
+# The actual Berkeley schedule (effective July 1, 2025) uses flat fees by
+# square-footage threshold for ADUs and a per-$100-of-valuation rate for
+# the building permit; the structure modeled here matches that shape but
+# the dollar amounts and thresholds have not been verified.
 ---
 metadata:
+  ohfs_version: "0.2"
   effective_date: 2024-07-01
   city_name: "Berkeley"
   state: CA
   fee_currency: USD
   jurisdiction_type: city
   source_url: "https://berkeleyca.gov/your-government/our-work/planning-fees"
-  notes: "UNVERIFIED — fee amounts have not been confirmed against the official Berkeley fee schedule. The real schedule uses square-footage-threshold flat fees for ADUs, which this file does not yet model. Affordable Housing Mitigation Fee referenced under Berkeley Municipal Code Ch. 22.20."
+  notes: "UNVERIFIED — fee amounts have not been confirmed against the official Berkeley fee schedule. ADU step thresholds and amounts modeled after the Berkeley pattern but unverified."
 
 fee_structure:
 
+  # -----------------------------------------------------------------------
+  # Single-Family Residential
+  # Berkeley charges a flat base permit fee plus a per-$100-of-valuation
+  # rate above a $3,000 valuation threshold; modeled here as a `linear`
+  # over project_valuation with a base.
+  # -----------------------------------------------------------------------
   SINGLE_FAMILY:
-    tier_starts:
-      - 0
-      - 25000
-      - 100000
-      - 500000
-      - 1000000
-    tier_prices:
-      - 0.02580
-      - 0.02080
-      - 0.01540
-      - 0.01160
-      - 0.00880
-    building_permit_fee: Tiered
-    plan_check_rate: 0.80
-    plan_check_fee: "plan_check_rate*building_permit_fee"
-    seismic_retrofit_surcharge: "0.00050*project_valuation"
-    strong_motion_fee: "0.00013*project_valuation"
+    building_permit_fee:
+      type: linear
+      driver: project_valuation
+      base: 150
+      rate: 0.024     # $2.40 per $100 of valuation
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.80
+    seismic_retrofit_surcharge:
+      type: linear
+      driver: project_valuation
+      rate: 0.00050
+    strong_motion_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00013
     green_building_fee: 350
-    records_management_fee: "0.03*building_permit_fee"
+    records_management_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.03
     total_fee: "building_permit_fee+plan_check_fee+seismic_retrofit_surcharge+strong_motion_fee+green_building_fee+records_management_fee"
 
+  # -----------------------------------------------------------------------
+  # ADU — flat fees by square-footage threshold (the headline new pattern).
+  # -----------------------------------------------------------------------
   ADU:
-    building_permit_fee: 1650
-    plan_check_fee: "0.80*building_permit_fee"
-    school_fee: "4.79*gross_sq_ft"
+    building_permit_fee:
+      type: step
+      driver: gross_sq_ft
+      steps:
+        - {up_to: 750,  amount: 1650}
+        - {up_to: 1000, amount: 2200}
+        - {up_to: null, amount: 2950}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.80
+    adu_notice_fee: 500
+    address_assignment_fee: 250
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+      applies_if: "gross_sq_ft > 500"      # state law: <= 500 sf JADUs/ADUs are exempt
     strong_motion_fee: 25
-    total_fee: "building_permit_fee+plan_check_fee+school_fee+strong_motion_fee"
+    total_fee: "building_permit_fee+plan_check_fee+adu_notice_fee+address_assignment_fee+school_fee+strong_motion_fee"
 
+  # -----------------------------------------------------------------------
+  # Multi-Family Residential
+  # -----------------------------------------------------------------------
   MULTI_FAMILY:
-    tier_starts:
-      - 0
-      - 100000
-      - 500000
-      - 1000000
-      - 5000000
-    tier_prices:
-      - 0.02380
-      - 0.01820
-      - 0.01340
-      - 0.01010
-      - 0.00740
-    building_permit_fee: Tiered
-    plan_check_rate: 0.80
-    plan_check_fee: "plan_check_rate*building_permit_fee"
-    affordable_housing_mitigation_fee: 37000
+    building_permit_fee:
+      type: linear
+      driver: project_valuation
+      base: 150
+      rate: 0.024
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.80
+    affordable_housing_mitigation_fee:
+      type: flat
+      amount: 37000
+      scope: per_unit
     transportation_impact_fee:
-      depends_on: bedroom_count
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
       values:
-        0: 1850
-        1: 2700
-        2: 3850
-        3plus: 5000
-    school_fee: "4.79*gross_sq_ft"
-    strong_motion_fee: "0.00013*project_valuation"
-    seismic_retrofit_surcharge: "0.00050*project_valuation"
-    total_fee: "building_permit_fee+plan_check_fee+affordable_housing_mitigation_fee*unit_count+transportation_impact_fee+school_fee+strong_motion_fee+seismic_retrofit_surcharge"
+        "0":     1850
+        "1":     2700
+        "2":     3850
+        "3plus": 5000
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+    strong_motion_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00013
+    seismic_retrofit_surcharge:
+      type: linear
+      driver: project_valuation
+      rate: 0.00050
+    total_fee: "building_permit_fee+plan_check_fee+affordable_housing_mitigation_fee+transportation_impact_fee+school_fee+strong_motion_fee+seismic_retrofit_surcharge"

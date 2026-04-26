@@ -1,0 +1,29 @@
+# OHFS template for "step" fees — flat amounts that depend on which band
+# of a continuous variable (e.g., gross_sq_ft) the project falls in.
+# Common for ADU permit fees: one amount for ADUs <= 750 sf, another for
+# 751-1000 sf, etc. Unlike `marginal_tiered`, the result is a single
+# whole amount, not a sum of per-band charges.
+#
+# Notation:
+#   {value}  — substitute from fee schedule source
+#   [value]  — mandatory field
+#   (value)  — fill in as appropriate
+---
+metadata:
+  ohfs_version: "0.2"
+  effective_date: [YYYY-MM-DD]
+  city_name: [city name]
+  state: CA
+  fee_currency: USD
+  source_url: (URL to official fee schedule document)
+
+fee_structure:
+  {permit_class}:                  # e.g. ADU
+    [building_permit_fee]:
+      type: step
+      driver: gross_sq_ft          # or another continuous input variable
+      steps:
+        - {up_to: (threshold_1), amount: (fee_for_band_1)}
+        - {up_to: (threshold_2), amount: (fee_for_band_2)}
+        - {up_to: null,          amount: (fee_for_top_band)}   # null = no upper bound
+    [total_fee]: building_permit_fee

@@ -8,95 +8,138 @@
 # fee schedule. Confirm against the source URL in metadata before any use.
 ---
 metadata:
+  ohfs_version: "0.2"
   effective_date: 2024-07-01
   city_name: "Sacramento"
   state: CA
   fee_currency: USD
   jurisdiction_type: city
   source_url: "https://www.cityofsacramento.gov/community-development"
-  notes: "UNVERIFIED — fee amounts have not been confirmed against the official fee schedule; it is not clear whether the values below match current rates. Excludes North Natomas / Greenbriar SPA fees."
+  notes: "UNVERIFIED — fee amounts have not been confirmed against the official fee schedule. Excludes North Natomas / Greenbriar SPA fees."
 
 fee_structure:
 
   SINGLE_FAMILY:
-    tier_starts:
-      - 0
-      - 25000
-      - 100000
-      - 500000
-      - 1000000
-    tier_prices:
-      - 0.01950
-      - 0.01620
-      - 0.01180
-      - 0.00880
-      - 0.00640
-    building_permit_fee: Tiered
-    plan_check_rate: 0.70
-    plan_check_fee: "plan_check_rate*building_permit_fee"
+    building_permit_fee:
+      type: marginal_tiered
+      driver: project_valuation
+      tiers:
+        - {from: 0,       rate: 0.01950}
+        - {from: 25000,   rate: 0.01620}
+        - {from: 100000,  rate: 0.01180}
+        - {from: 500000,  rate: 0.00880}
+        - {from: 1000000, rate: 0.00640}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.70
     park_impact_fee: 4800
     transportation_impact_fee: 3200
     drainage_impact_fee: 1100
-    school_fee: "4.79*gross_sq_ft"
-    strong_motion_fee: "0.00013*project_valuation"
-    green_building_fee: "0.00007*project_valuation"
-    general_plan_fee: "0.04*building_permit_fee"
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+    strong_motion_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00013
+    green_building_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00007
+    general_plan_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.04
     total_fee: "building_permit_fee+plan_check_fee+park_impact_fee+transportation_impact_fee+drainage_impact_fee+school_fee+strong_motion_fee+green_building_fee+general_plan_fee"
 
   ADU:
-    building_permit_fee: 1400
-    plan_check_fee: "0.70*building_permit_fee"
-    school_fee: "4.79*gross_sq_ft"
+    building_permit_fee:
+      type: step
+      driver: gross_sq_ft
+      steps:
+        - {up_to: 750,  amount: 1400}
+        - {up_to: 1000, amount: 1850}
+        - {up_to: null, amount: 2400}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.70
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+      applies_if: "gross_sq_ft > 500"
     strong_motion_fee: 25
     total_fee: "building_permit_fee+plan_check_fee+school_fee+strong_motion_fee"
 
   JADU:
     building_permit_fee: 425
-    plan_check_fee: "0.70*building_permit_fee"
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.70
     total_fee: "building_permit_fee+plan_check_fee"
 
   MULTI_FAMILY:
-    tier_starts:
-      - 0
-      - 100000
-      - 500000
-      - 1000000
-      - 5000000
-    tier_prices:
-      - 0.01880
-      - 0.01430
-      - 0.01040
-      - 0.00780
-      - 0.00560
-    building_permit_fee: Tiered
-    plan_check_rate: 0.70
-    plan_check_fee: "plan_check_rate*building_permit_fee"
+    building_permit_fee:
+      type: marginal_tiered
+      driver: project_valuation
+      tiers:
+        - {from: 0,       rate: 0.01880}
+        - {from: 100000,  rate: 0.01430}
+        - {from: 500000,  rate: 0.01040}
+        - {from: 1000000, rate: 0.00780}
+        - {from: 5000000, rate: 0.00560}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.70
     park_impact_fee:
-      depends_on: bedroom_count
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
       values:
-        0: 1850
-        1: 2750
-        2: 3850
-        3: 4950
-        4plus: 6100
+        "0":     1850
+        "1":     2750
+        "2":     3850
+        "3":     4950
+        "4plus": 6100
     transportation_impact_fee:
-      depends_on: bedroom_count
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
       values:
-        0: 1450
-        1: 2150
-        2: 3050
-        3: 3950
-        4plus: 4850
+        "0":     1450
+        "1":     2150
+        "2":     3050
+        "3":     3950
+        "4plus": 4850
     drainage_impact_fee:
-      depends_on: bedroom_count
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
       values:
-        0: 350
-        1: 525
-        2: 750
-        3: 975
-        4plus: 1200
-    school_fee: "4.79*gross_sq_ft"
-    affordable_housing_fee: "1.85*gross_sq_ft"
-    strong_motion_fee: "0.00013*project_valuation"
-    technology_surcharge: "0.04*building_permit_fee"
-    total_fee: "building_permit_fee+plan_check_fee+park_impact_fee+transportation_impact_fee+drainage_impact_fee+school_fee+affordable_housing_fee+strong_motion_fee+technology_surcharge"
+        "0":     350
+        "1":     525
+        "2":     750
+        "3":     975
+        "4plus": 1200
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+    affordable_housing_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 1.85
+    strong_motion_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00013
+    technology_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.04
+    total_fee: "building_permit_fee+plan_check_fee+park_impact_fee+transportation_impact_fee+drainage_impact_fee+school_fee+affordable_housing_fee+strong_motion_fee+technology_fee"

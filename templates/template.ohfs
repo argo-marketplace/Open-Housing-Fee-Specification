@@ -1,4 +1,8 @@
-# Base template for Open Housing Fee Specification (OHFS)
+# Base template for Open Housing Fee Specification (OHFS), v0.2.
+#
+# Every long-form fee component declares an explicit `type`. Bare numbers
+# are shorthand for `{type: flat, amount: N}`; bare strings containing
+# operators are shorthand for `{type: formula, formula: "..."}`.
 #
 # Notation:
 #   {value}  — substitute from fee schedule source
@@ -6,6 +10,7 @@
 #   (value)  — fill in as appropriate
 ---
 metadata:
+  ohfs_version: "0.2"
   effective_date: [YYYY-MM-DD]
   city_name: [city name]
   state: CA
@@ -15,10 +20,13 @@ metadata:
   notes: (any relevant caveats or exceptions)
 
 fee_structure:
-  {permit_class}:               # e.g. SINGLE_FAMILY, ADU, MULTI_FAMILY
-    {fee_component}: (amount)   # flat fee amount, or formula, or "Tiered"
-    [total_fee]: (formula)      # sum of applicable fee components
-
-  {permit_class}:
-    {fee_component}: (amount)
-    [total_fee]: (formula)
+  {permit_class}:                        # e.g. SINGLE_FAMILY, ADU, MULTI_FAMILY
+    {fee_component}: (number)            # flat shorthand
+    {another_fee}:                       # long form
+      type: (flat|categorical|step|linear|marginal_tiered|block_tiered|proportional|formula)
+      # ...keys appropriate to the chosen type...
+      scope: (per_project|per_unit|per_sqft|per_bedroom)   # optional, default per_project
+      applies_if: (variable_or_expression)                 # optional gate
+      cap: (number)                                        # optional bound
+      floor: (number)                                      # optional bound
+    [total_fee]: (formula or single component name)

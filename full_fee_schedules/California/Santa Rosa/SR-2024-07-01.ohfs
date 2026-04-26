@@ -7,91 +7,121 @@
 # fee schedule. Confirm against the source URL in metadata before any use.
 ---
 metadata:
+  ohfs_version: "0.2"
   effective_date: 2024-07-01
   city_name: "Santa Rosa"
   state: CA
   fee_currency: USD
   jurisdiction_type: city
   source_url: "https://srcity.org/214/Planning-Economic-Development"
-  notes: "UNVERIFIED — fee amounts have not been confirmed against the official fee schedule; it is not clear whether the values below match current rates. Reflects post-2017 fire rebuilding fee waivers expired."
+  notes: "UNVERIFIED — fee amounts have not been confirmed against the official fee schedule. Reflects post-2017 fire rebuilding fee waivers expired."
 
 fee_structure:
 
   SINGLE_FAMILY:
-    tier_starts:
-      - 0
-      - 25000
-      - 100000
-      - 500000
-      - 1000000
-    tier_prices:
-      - 0.02080
-      - 0.01680
-      - 0.01250
-      - 0.00940
-      - 0.00710
-    building_permit_fee: Tiered
-    plan_check_rate: 0.65
-    plan_check_fee: "plan_check_rate*building_permit_fee"
+    building_permit_fee:
+      type: marginal_tiered
+      driver: project_valuation
+      tiers:
+        - {from: 0,       rate: 0.02080}
+        - {from: 25000,   rate: 0.01680}
+        - {from: 100000,  rate: 0.01250}
+        - {from: 500000,  rate: 0.00940}
+        - {from: 1000000, rate: 0.00710}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.65
     park_impact_fee: 5400
     transportation_impact_fee: 3650
     water_connection_fee: 4800
     sewer_connection_fee: 5950
-    school_fee: "4.79*gross_sq_ft"
-    strong_motion_fee: "0.00013*project_valuation"
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+    strong_motion_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00013
     total_fee: "building_permit_fee+plan_check_fee+park_impact_fee+transportation_impact_fee+water_connection_fee+sewer_connection_fee+school_fee+strong_motion_fee"
 
   ADU:
-    building_permit_fee: 1250
-    plan_check_fee: "0.65*building_permit_fee"
-    school_fee: "4.79*gross_sq_ft"
+    building_permit_fee:
+      type: step
+      driver: gross_sq_ft
+      steps:
+        - {up_to: 750,  amount: 1250}
+        - {up_to: 1000, amount: 1700}
+        - {up_to: null, amount: 2200}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.65
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+      applies_if: "gross_sq_ft > 500"
     strong_motion_fee: 22
     total_fee: "building_permit_fee+plan_check_fee+school_fee+strong_motion_fee"
 
   MULTI_FAMILY:
-    tier_starts:
-      - 0
-      - 100000
-      - 500000
-      - 1000000
-      - 5000000
-    tier_prices:
-      - 0.01950
-      - 0.01480
-      - 0.01080
-      - 0.00820
-      - 0.00610
-    building_permit_fee: Tiered
-    plan_check_rate: 0.65
-    plan_check_fee: "plan_check_rate*building_permit_fee"
+    building_permit_fee:
+      type: marginal_tiered
+      driver: project_valuation
+      tiers:
+        - {from: 0,       rate: 0.01950}
+        - {from: 100000,  rate: 0.01480}
+        - {from: 500000,  rate: 0.01080}
+        - {from: 1000000, rate: 0.00820}
+        - {from: 5000000, rate: 0.00610}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.65
     park_impact_fee:
-      depends_on: bedroom_count
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
       values:
-        0: 2400
-        1: 3450
-        2: 4750
-        3plus: 6050
+        "0":     2400
+        "1":     3450
+        "2":     4750
+        "3plus": 6050
     transportation_impact_fee:
-      depends_on: bedroom_count
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
       values:
-        0: 1850
-        1: 2550
-        2: 3450
-        3plus: 4350
+        "0":     1850
+        "1":     2550
+        "2":     3450
+        "3plus": 4350
     water_connection_fee:
-      depends_on: bedroom_count
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
       values:
-        0: 2200
-        1: 2750
-        2: 3500
-        3plus: 4250
+        "0":     2200
+        "1":     2750
+        "2":     3500
+        "3plus": 4250
     sewer_connection_fee:
-      depends_on: bedroom_count
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
       values:
-        0: 2750
-        1: 3450
-        2: 4350
-        3plus: 5250
-    school_fee: "4.79*gross_sq_ft"
-    strong_motion_fee: "0.00013*project_valuation"
+        "0":     2750
+        "1":     3450
+        "2":     4350
+        "3plus": 5250
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+    strong_motion_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00013
     total_fee: "building_permit_fee+plan_check_fee+park_impact_fee+transportation_impact_fee+water_connection_fee+sewer_connection_fee+school_fee+strong_motion_fee"

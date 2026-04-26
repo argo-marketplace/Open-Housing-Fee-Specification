@@ -1,0 +1,42 @@
+# OHFS template for `categorical` fees — values looked up by one or more
+# discrete project variables.
+#
+# Single driver: use `driver:` plus a flat keys-to-values map.
+# Multiple drivers: use `drivers: [v1, v2, ...]` plus pipe-delimited keys
+#   in the same order.
+#
+# `scope: per_unit` (or per_sqft, per_bedroom) multiplies the looked-up
+# value when summing into total_fee.
+#
+# Notation:
+#   {value}  — substitute from fee schedule source
+#   [value]  — mandatory field
+#   (value)  — fill in as appropriate
+---
+metadata:
+  ohfs_version: "0.2"
+  effective_date: [YYYY-MM-DD]
+  city_name: [city name]
+  state: CA
+  fee_currency: USD
+  source_url: (URL to official fee schedule document)
+
+fee_structure:
+  {permit_class}:
+    {fee_component}:
+      type: categorical
+      driver: {variable}              # e.g. bedroom_count, unit_type, zone
+      scope: (per_project|per_unit|per_sqft|per_bedroom)   # optional
+      values:
+        "(value_1)": (fee_amount)
+        "(value_2)": (fee_amount)
+        "(value_3)": (fee_amount)
+
+    {multi_var_fee}:
+      type: categorical
+      drivers: [{variable_1}, {variable_2}]
+      scope: (per_project|per_unit|per_sqft|per_bedroom)   # optional
+      values:
+        "(val_1)|(val_2)": (fee_amount)
+        "(val_1)|(val_2)": (fee_amount)
+    [total_fee]: "{fee_component}+{multi_var_fee}"

@@ -24,16 +24,18 @@ OHFS is designed so that anyone can contribute standardized housing fee data for
    ```
 4. Start from one of the templates in the `templates/` directory:
    - `template.ohfs` — base template for any fee structure
-   - `tiered_template.ohfs` — for fees tiered by project valuation or square footage
-   - `depends_on_template.ohfs` — for fees that vary by a single variable (e.g., bedroom count)
-   - `depends_on_multiple_template.ohfs` — for fees that vary by multiple variables
+   - `tiered_template.ohfs` — for fees tiered by project valuation or square footage (`marginal_tiered` / `block_tiered`)
+   - `step_template.ohfs` — for flat fees that depend on which band of a continuous variable the project falls in (`step`), e.g., ADU fees by square-footage threshold
+   - `categorical_template.ohfs` — for fees looked up by one or more discrete variables (`categorical`)
 
-5. Fill in the fee structure based on the city's published fee schedule. Key things to capture:
-   - **Building permit fee** — usually tiered by project valuation. Note whether tiers are per-dollar or per-$1,000 of valuation.
-   - **Plan check fee** — usually a percentage of the building permit fee (commonly 65–80%).
-   - **Impact fees** — transportation, park, school, fire. These are often flat per-unit amounts that vary by bedroom count or project type.
+5. Fill in the fee structure based on the city's published fee schedule. Each long-form component declares an explicit `type`; bare numbers and bare formula strings are valid shorthand. Key things to capture:
+   - **Building permit fee** — usually `marginal_tiered` over `project_valuation`, but some cities (e.g., Berkeley) use `linear` with a base + per-$100 rate.
+   - **ADU fees** — frequently `step` over `gross_sq_ft` with thresholds at 750 and 1000 sq ft.
+   - **Plan check fee** — usually `proportional` to the building permit fee (commonly 65–80%).
+   - **Impact fees** — transportation, park, school, fire. Often `categorical` over `bedroom_count` with `scope: per_unit`, or `linear` over `gross_sq_ft`.
    - **Connection fees** — water and sewer connection or capacity fees.
-   - **State fees** — strong motion (SMIP) fee (typically 0.01% of valuation) and school fees (Education Code Level 1 fee).
+   - **State fees** — strong motion (SMIP) fee (typically `linear` at 0.00013 × `project_valuation`) and school fees (Education Code Level 1 fee).
+   - **Conditional fees** — coastal development permits and similar gates: use the `applies_if` modifier on a `flat` (or any other) component.
    - **Other surcharges** — technology fees, general plan fees, green building fees.
 
 6. Use the standard fee component names and input variable names from the [README reference tables](README.md#fee-components) wherever possible to ensure consistency across files.

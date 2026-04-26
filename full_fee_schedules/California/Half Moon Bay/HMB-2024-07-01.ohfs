@@ -7,86 +7,121 @@
 # fee schedule. Confirm against the source URL in metadata before any use.
 ---
 metadata:
+  ohfs_version: "0.2"
   effective_date: 2024-07-01
   city_name: "Half Moon Bay"
   state: CA
   fee_currency: USD
   jurisdiction_type: city
   source_url: "https://www.hmbcity.com/170/Planning"
-  notes: "UNVERIFIED — fee amounts have not been confirmed against the official fee schedule; it is not clear whether the values below match current rates. Coastal Development Permit required separately for projects in coastal zone."
+  notes: "UNVERIFIED — fee amounts have not been confirmed against the official fee schedule. Coastal Development Permit applies in coastal zone (modeled with applies_if)."
 
 fee_structure:
 
   SINGLE_FAMILY:
-    tier_starts:
-      - 0
-      - 25000
-      - 100000
-      - 500000
-    tier_prices:
-      - 0.02250
-      - 0.01820
-      - 0.01380
-      - 0.01040
-    building_permit_fee: Tiered
-    plan_check_rate: 0.70
-    plan_check_fee: "plan_check_rate*building_permit_fee"
-    coastal_development_permit_fee: 2400
+    building_permit_fee:
+      type: marginal_tiered
+      driver: project_valuation
+      tiers:
+        - {from: 0,      rate: 0.02250}
+        - {from: 25000,  rate: 0.01820}
+        - {from: 100000, rate: 0.01380}
+        - {from: 500000, rate: 0.01040}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.70
+    coastal_development_permit_fee:
+      type: flat
+      amount: 2400
+      applies_if: in_coastal_zone
     park_impact_fee: 4800
     water_connection_fee: 32500
     sewer_connection_fee: 14800
-    school_fee: "4.79*gross_sq_ft"
-    strong_motion_fee: "0.00013*project_valuation"
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+    strong_motion_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00013
     total_fee: "building_permit_fee+plan_check_fee+coastal_development_permit_fee+park_impact_fee+water_connection_fee+sewer_connection_fee+school_fee+strong_motion_fee"
 
   ADU:
-    building_permit_fee: 1050
-    plan_check_fee: "0.70*building_permit_fee"
+    building_permit_fee:
+      type: step
+      driver: gross_sq_ft
+      steps:
+        - {up_to: 750,  amount: 1050}
+        - {up_to: 1000, amount: 1450}
+        - {up_to: null, amount: 1950}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.70
     coastal_development_permit_fee:
-      depends_on: coastal_zone
-      values:
-        in_zone: 1200
-        outside_zone: 0
-    school_fee: "4.79*gross_sq_ft"
+      type: flat
+      amount: 1200
+      applies_if: in_coastal_zone
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+      applies_if: "gross_sq_ft > 500"
     strong_motion_fee: 20
     total_fee: "building_permit_fee+plan_check_fee+coastal_development_permit_fee+school_fee+strong_motion_fee"
 
   MULTI_FAMILY:
-    tier_starts:
-      - 0
-      - 100000
-      - 500000
-      - 1000000
-    tier_prices:
-      - 0.02180
-      - 0.01680
-      - 0.01250
-      - 0.00940
-    building_permit_fee: Tiered
-    plan_check_rate: 0.70
-    plan_check_fee: "plan_check_rate*building_permit_fee"
-    coastal_development_permit_fee: 3600
+    building_permit_fee:
+      type: marginal_tiered
+      driver: project_valuation
+      tiers:
+        - {from: 0,       rate: 0.02180}
+        - {from: 100000,  rate: 0.01680}
+        - {from: 500000,  rate: 0.01250}
+        - {from: 1000000, rate: 0.00940}
+    plan_check_fee:
+      type: proportional
+      of: building_permit_fee
+      rate: 0.70
+    coastal_development_permit_fee:
+      type: flat
+      amount: 3600
+      applies_if: in_coastal_zone
     park_impact_fee:
-      depends_on: bedroom_count
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
       values:
-        0: 2400
-        1: 3400
-        2: 4500
-        3plus: 5650
+        "0":     2400
+        "1":     3400
+        "2":     4500
+        "3plus": 5650
     water_connection_fee:
-      depends_on: bedroom_count
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
       values:
-        0: 18500
-        1: 22400
-        2: 27800
-        3plus: 33200
+        "0":     18500
+        "1":     22400
+        "2":     27800
+        "3plus": 33200
     sewer_connection_fee:
-      depends_on: bedroom_count
+      type: categorical
+      driver: bedroom_count
+      scope: per_unit
       values:
-        0: 8400
-        1: 10500
-        2: 13200
-        3plus: 15900
-    school_fee: "4.79*gross_sq_ft"
-    strong_motion_fee: "0.00013*project_valuation"
+        "0":     8400
+        "1":     10500
+        "2":     13200
+        "3plus": 15900
+    school_fee:
+      type: linear
+      driver: gross_sq_ft
+      rate: 4.79
+    strong_motion_fee:
+      type: linear
+      driver: project_valuation
+      rate: 0.00013
     total_fee: "building_permit_fee+plan_check_fee+coastal_development_permit_fee+park_impact_fee+water_connection_fee+sewer_connection_fee+school_fee+strong_motion_fee"
